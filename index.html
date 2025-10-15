@@ -482,6 +482,9 @@ input[type="range"] {
             game.keys[e.key] = false;
         });
 
+      let gameRunning = false;
+        let animationId = null;
+
         function startGame() {
             const stageData = stages[gameState.currentStage] || stages[1];
             
@@ -501,22 +504,34 @@ input[type="range"] {
                 fireCatFinished: false,
                 waterCatFinished: false
             };
-
-            gameLoop();
-        }
-
-        function restartGame() {
-            startGame();
-        }
-
-        function gameLoop() {
-            if (document.getElementById('gameScreen').classList.contains('active')) {
-                update();
-                render();
-                requestAnimationFrame(gameLoop);
+            
+            // 게임 루프 시작
+            if (!gameRunning) {
+                gameRunning = true;
+                gameLoop();
             }
         }
 
+        function restartGame() {
+            gameRunning = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            setTimeout(() => {
+                startGame();
+            }, 100);
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+            update();
+            render();
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+    // 최초 1회만 루프 실행
+    gameRunning = true;
+    gameLoop();
         function update() {
             // 불 고양이 조작 (WASD)
             updateCat(game.fireCat, 'w', 'a', 'd');
@@ -616,6 +631,7 @@ input[type="range"] {
         function checkWinCondition() {
             if (game.fireCatFinished && game.waterCatFinished) {
                 stageClear();
+                gameRunning = false;
             }
         }
 
