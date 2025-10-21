@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facucat - Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+
+        .micro-5-regular {
+            font-family: "Micro 5", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .container {
+            display: block;
+            margin: 20px;
+        }
+
+        .top-row,
+        .bottom-row {
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .gif {
+            width: 200px;
+            height: 400px;
+            padding: 30px;
+        }
+
+        .main {
+            position: relative;
+            display: inline-block;
+        }
+
+        .main-img {
+            height: 600px;
+            padding-top: 30px;
+        }
+
+        .ad {
+            height: 200px;
+        }
+
+        .main button {
+            position: absolute;
+            display: block;
+            color: #ffffff;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.1s;
+            border: none;
+            background-color: rgb(0,0,0,0);
+        }
+
+        .main button:hover {
+            transform: scale(1.05);
+        }
+
+        .main button:active {
+            transform: scale(0.95);
+        }
+
+        .back {
+            top: 50px;
+            left: 0;
+        }
+
+        .next {
+            bottom: 10px;
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="top-row">
+            <img src="../img/(광고)물불게임.gif" class="gif" alt="">
+            <div class="main">
+                <button class="micro-5-regular back" onclick="location.href='index.html'"> &lt;BACK TO MENU</button>
+                <img src="../img/how to play.png" class="main-img" alt="">
+                <button class="micro-5-regular next"> NEXT&gt;</button>
+            </div>
+            <img src="../img/(광고)라면가게.gif" class="gif">
+        </div>
+        <div class="bottom-row">
+            <img src="../img/내가만든거 아님.png" class="ad" alt="">
+            <img src="../img/역전재판.png" class="ad" alt="">
+        </div>
+    </div>
+</body>
+
+</html>
