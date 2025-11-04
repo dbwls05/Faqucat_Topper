@@ -8,6 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
 
+        /* ===== 공통 스타일 ===== */
         .micro-5-regular {
             font-family: "Micro 5", sans-serif;
             font-weight: 400;
@@ -16,37 +17,80 @@
 
         .container {
             display: block;
-            margin: 20px;
+            margin-top: 50px;
         }
 
         .top-row,
         .bottom-row {
-            padding: 10px;
+            padding: 20px;
             margin-left: auto;
             margin-right: auto;
             text-align: center;
         }
 
+        /* ===== 이미지 영역 ===== */
         .gif {
-            width: 200px;
-            height: 400px;
+            width: 300px;
+            height: 500px;
             padding: 30px;
         }
 
-        .main {
+        .ad {
+            height: 300px;
+        }
+
+        /* ===== 메인 구조 ===== */
+        .top-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
-            display: inline-block;
+        }
+
+        .main-back {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            width: 100%;
+            max-width: var(--main-max-width);
         }
 
         .main-img {
-            height: 600px;
-            padding-top: 30px;
+            width: 1200px;
+            height: 100%;
+            position: relative;
+        }
+
+        .main-obj {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1200px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 1200px;
+        }
+
+        /* ===== 버튼 및 제목 ===== */
+        h1 {
+            font-size: 200px;
+            margin-bottom: 10px;
+            text-shadow: 8px 8px 0px rgba(0, 0, 0, 0.5);
         }
 
         .main-btn {
-            /* 컨테이너를 버튼들의 너비를 결정하는 inline-flex로 변경
-               width: max-content로 컨테이너 너비를 가장 넓은 버튼에 맞추고,
-               내부 버튼은 width:100%로 맞춰 동일한 너비를 갖도록 함 */
             display: inline-flex;
             flex-direction: column;
             align-items: stretch;
@@ -56,29 +100,18 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            padding: 20px 50px 20px 50px;
-        }
-
-        .ad {
-            height: 200px;
-        }
-
-        h1 {
-            font-size: 200px;
-            margin-bottom: 10px;
-            text-shadow: 8px 8px 0px rgba(0, 0, 0, 0.5);
+            padding: 20px 50px;
         }
 
         .main-btn button {
-            /* 컨테이너 너비에 맞춰 버튼을 동일 너비로 만듭니다 */
             display: block;
             width: 100%;
             border: 5px solid #fff;
             padding: 15px 60px;
-            background-color: rgba(0,0,0,0);
+            background-color: rgba(0, 0, 0, 0);
             color: #fff;
             font-size: 50px;
-            margin: 20px 0; /* 수직 간격만 유지 */
+            margin: 20px 0;
             box-sizing: border-box;
             cursor: pointer;
             box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.3);
@@ -97,35 +130,47 @@
             transform: translate(4px, 4px);
             box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
         }
-
     </style>
 </head>
 
 <body>
 
     <div class="container">
+
         <div class="top-row">
+
             <img src="../img/(광고)물불게임.gif" class="gif" alt="">
 
-            <div class="main">
+            <!-- <div class="main">
                 <img src="../img/main.png" class="main-img" alt="">
-                
-                <div class="main-btn">
-                    <h1 class="micro-5-regular">Facucat</h1>
-                    <button class="micro-5-regular btn" onclick="location.href='game.html'">Start</button>
-                    <button class="micro-5-regular btn" onclick="location.href='guide.html'">How to play</button>
+            </div> -->
+            <div class="main-back">
+
+                <img src="../img/하늘.png" class="main-img" alt="">
+
+                <div class="main-obj">
+                    <img src="../img/구름.gif" class="main-cloud" alt="">
+                    <img src="../img/지형1.png" class="main-ground" alt="">
                 </div>
+
             </div>
 
+            <div class="main-btn">
+                <h1 class="micro-5-regular">Facucat</h1>
+                <button class="micro-5-regular btn" onclick="location.href='game.html'">Start</button>
+                <button class="micro-5-regular btn" onclick="location.href='guide.html'">How to play</button>
+            </div>
             <img src="../img/(광고)라면가게.gif" class="gif">
-
         </div>
+
 
         <div class="bottom-row">
             <img src="../img/내가만든거 아님.png" class="ad" alt="">
             <img src="../img/역전재판.png" class="ad" alt="">
         </div>
     </div>
+    
+
 </body>
 
 </html>

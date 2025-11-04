@@ -8,15 +8,17 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
 
+        /* ===== 폰트 ===== */
         .micro-5-regular {
             font-family: "Micro 5", sans-serif;
             font-weight: 400;
             font-style: normal;
         }
 
+        /* ===== 공통 레이아웃 ===== */
         .container {
             display: block;
-            margin: 20px;
+            margin: 50px;
         }
 
         .top-row,
@@ -27,35 +29,46 @@
             text-align: center;
         }
 
+        .top-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* ===== 이미지 영역 ===== */
         .gif {
-            width: 200px;
-            height: 400px;
+            width: 300px;
+            height: 500px;
             padding: 30px;
         }
 
+        .ad {
+            height: 300px;
+        }
+
+        /* ===== 메인 콘텐츠 영역 ===== */
         .main {
             position: relative;
             display: inline-block;
         }
 
         .main-img {
-            height: 600px;
+            height: 750px;
             padding-top: 30px;
         }
 
-        .ad {
-            height: 200px;
-        }
-
+        /* ===== 버튼 ===== */
         .main button {
             position: absolute;
             display: block;
-            color: #ffffff;
+            color: #fff;
             font-size: 40px;
             cursor: pointer;
             transition: all 0.1s;
             border: none;
-            background-color: rgb(0,0,0,0);
+            background-color: rgba(0, 0, 0, 0);
+            text-shadow: 5px 5px 0 rgba(0, 0, 0, 0.4);
         }
 
         .main button:hover {
@@ -84,17 +97,19 @@
         <div class="top-row">
             <img src="../img/(광고)물불게임.gif" class="gif" alt="">
             <div class="main">
-                <button class="micro-5-regular back" onclick="location.href='index.html'"> &lt;BACK TO MENU</button>
+                <button class="micro-5-regular back" onclick="location.href='guide.html'">&lt; BACK </button>
                 <img src="../img/how to play2.png" class="main-img" alt="">
-                <button class="micro-5-regular next" onclick="location.href='game.html'"> START &gt;</button>
+                <button class="micro-5-regular next" onclick="location.href='game.html'">START ! &gt;</button>
             </div>
-            <img src="../img/(광고)라면가게.gif" class="gif">
+            <img src="../img/(광고)라면가게.gif" class="gif" alt="">
         </div>
+
         <div class="bottom-row">
             <img src="../img/내가만든거 아님.png" class="ad" alt="">
             <img src="../img/역전재판.png" class="ad" alt="">
         </div>
     </div>
+
 </body>
 
 </html>
