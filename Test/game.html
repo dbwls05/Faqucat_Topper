@@ -1,11 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Facucat</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+
+        .micro-5-regular {
+            font-family: "Micro 5", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        /* 
+
+        .top-row,
+        .bottom-row {
+            display: flex;
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        } */
+
+       
+
+        /* .main {
+            
+            position: relative;
+            display: flex;
+        }
+
+        .main-img {
+            height: 600px;
+            padding-top: 30px;
+            position: relative;
+        }
+
+        .ad {
+            height: 200px;
+        }
+        .main-back{
+            position: absolute;
+        } */ 
+
+        .top-row {
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .main-back {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .main-img {
+            /* height: 600px; */
+            width: 1200px;
+            height: 100%;
+            /* padding-top: 30px; */
+            position: relative
+        }
+
+        .main-obj {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1200px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 1200px;
+
+        }
+        /*게임 배경 설정 끝 */
+
+        @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+
+        .micro-5-regular {
+            font-family: "Micro 5", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .container {
+            display: flex;
+            margin: 20px;
+        }
+
+        .top-row,
+        .bottom-row {
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            display : flex;
+        }
+
+        .gif {
+            width: 200px;
+            height: 400px;
+            padding: 30px;
+        }
+
+        .main {
+            position: relative;
+            display: inline-block;
+        }
+
+        .ad {
+            height: 200px;
+        }
+
+    </style>
 </head>
+
 <body>
-    <p>개발중...!</p>
+
+    <div class="container">
+        <!-- <div class="top-row">
+            <img src="../img/(광고)물불게임.gif" class="gif" alt="">
+
+            <div class="main">
+                <img src="../img/채워진하트.png" alt="">
+                <h1>Stage</h1>
+                <img src="../img/Stop.png" alt="">
+            </div> -->
+            <div class="main-back">
+                <img src="../img/하늘.png" class="main-img" alt="">
+
+                <div class="main-obj">
+                    <img src="../img/구름.png" class="main-cloud" alt="">
+                    <img src="../img/지형1.png" class="main-ground" alt="">
+                </div>
+                
+            </div>
+
+            <!-- <div class="character">
+                <img src="../img/치즈냥.gif" id="gray" width="100" height="100">
+                <img src="../img/회색냥.gif" id="cheese" width="100" height="100">
+            </div>
+            <img src="../img/(광고)라면가게.gif" class="gif">
+
+        </div>
+ 
+        <div class="bottom-row">
+            <img src="../img/내가만든거 아님.png" class="ad" alt="">
+            <img src="../img/역전재판.png" class="ad" alt="">
+        </div> -->
+    </div>
 </body>
+
 </html>
