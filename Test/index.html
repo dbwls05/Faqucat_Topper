@@ -44,13 +44,19 @@
         }
 
         .main-btn {
-            display: block;
+            /* 컨테이너를 버튼들의 너비를 결정하는 inline-flex로 변경
+               width: max-content로 컨테이너 너비를 가장 넓은 버튼에 맞추고,
+               내부 버튼은 width:100%로 맞춰 동일한 너비를 갖도록 함 */
+            display: inline-flex;
+            flex-direction: column;
+            align-items: stretch;
+            width: max-content;
             position: absolute;
-            top: 50%;
+            top: 35%;
             left: 50%;
             transform: translate(-50%, -50%);
-            text-align: center;
             color: white;
+            padding: 20px 50px 20px 50px;
         }
 
         .ad {
@@ -64,13 +70,16 @@
         }
 
         .main-btn button {
+            /* 컨테이너 너비에 맞춰 버튼을 동일 너비로 만듭니다 */
             display: block;
+            width: 100%;
             border: 5px solid #fff;
             padding: 15px 60px;
             background-color: rgba(0,0,0,0);
             color: #fff;
             font-size: 50px;
-            margin: 20px auto;
+            margin: 20px 0; /* 수직 간격만 유지 */
+            box-sizing: border-box;
             cursor: pointer;
             box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.3);
             transition: all 0.1s;
