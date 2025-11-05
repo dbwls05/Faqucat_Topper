@@ -335,13 +335,21 @@
             }
 
             // 털뭉치 획득
+            // 털실 획득 시
+            // 털실 획득 시
             if (game.yarn.visible) {
                 if (checkOverlap(game.yellowCat, game.yarn, 40, 40) ||
                     checkOverlap(game.grayCat, game.yarn, 40, 40)) {
+
                     game.yarn.visible = false;
                     document.getElementById('boxDisplay').textContent = '털뭉치 획득!';
+
+                    // 바로 다음 스테이지로 이동
+                    window.location.href = 'stage2.html';
                 }
             }
+
+
         }
 
         function checkOverlap(cat, obj, width, height) {
@@ -433,8 +441,13 @@
         }
 
         function stageClear() {
-            game.running = false;
+            // 팝업 보여주기
             showModal('스테이지 클리어!', '털뭉치를 얻었습니다!', '🧶');
+
+            // 고양이 움직임 멈추고 싶으면 running false
+            game.running = false;
+
+            // 1초 뒤 다음 스테이지로 이동
             setTimeout(() => {
                 window.location.href = 'stage2.html';
             }, 1000);
