@@ -71,7 +71,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 3; 
+            z-index: 0; 
         }
 
         .main-ground {
@@ -160,10 +160,10 @@
                         <img src="../img/지형1.png" class="main-ground" alt="">
                     </div>
                     <canvas id="gameCanvas" width="1200" height="750"
-                    style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100;">
+                        style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100;">
                     </canvas>
             </div>
-            <div id="keysDisplay">0/2</div>
+            <div id="keysDisplay">0/1</div>
             <div id="boxDisplay">잠김</div>
 
             <img src="../img/(광고)라면가게.gif" class="gif">
@@ -193,7 +193,8 @@
             ground1: new Image(),
             ground2: new Image(),
             ground3: new Image(),
-            ground4: new Image()
+            ground4: new Image(),
+            light: new Image()
         };
 
         images.yellowCat.src = '../img/치즈냥.gif';
@@ -206,6 +207,7 @@
         images.ground2.src = '../img/땅_middle.png';
         images.ground3.src = '../img/땅_short.png';
         images.ground4.src = '../img/땅.png';
+        images.light.src = '../img/light.png';
 
         // images.yarn.src = '../img/털뭉치.png';
 
@@ -214,25 +216,29 @@
             grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
             platforms: [
                 { x: 292, y: 512, width: 573, height: 113, image: 'ground1' },
-                { x: 152, y: 474, width: 92, height: 50, image: 'ground3' },
-                { x: 28, y: 277, width: 92, height: 50, image: 'ground3' },
-                { x: 880, y: 298, width: 270, height: 95, image: 'ground2'},
-                { x: 502, y: 190, width: 270, height: 95, image: 'ground2'}
+                { x: 152, y: 475, width: 92, height: 50, image: 'ground3' },
+                { x: 152, y: 315, width: 92, height: 50, image: 'ground3'},
+                { x: 28, y: 220, width: 92, height: 50, image: 'ground3'},
+                { x: 28, y: 383, width: 92, height: 50, image: 'ground3' },
+                { x: 880, y: 428, width: 270, height: 95, image: 'ground2'},
+                { x: 595, y: 327, width: 270, height: 95, image: 'ground2'},
+                { x: 865, y: 222, width: 270, height: 95, image: 'ground2'}
+            ],
+            goals: [  // ← 이 부분 추가!
+                { x: 900, y: 180, type: 'yellow' },
+                { x: 1000, y: 180, type: 'gray' }
             ],
             keys: [
-                { x: 56, y: 240, collected: false, color: 'yellow', image: 'key'},
+                { x: 60, y: 130, collected: false, color: 'yellow', image: 'key'},
+                { x: 60, y: 130, collected: false, color: 'yellow', image: 'light'},
             ],
-            box: { x: 632, y: 167, opened: false, image: 'box_close' },
+            box: { x: 963, y: 199, opened: false, image: 'box_close' },
             yarn: { x: 0, y: 0, visible: false },
-            goals: [
-                { x: 520, y: 340, type: 'yellow' },
-                { x: 640, y: 340, type: 'gray' }
-            ],
             keyInput: {},
             lives: 3,
             gravity: 0.6,
             jumpPower: -13,
-            moveSpeed: 5,
+            moveSpeed: 6,
             gameStartTime: Date.now(),
             keysCollected: 0,
             yellowCatFinished: false,
@@ -257,112 +263,100 @@
             }
         });
 
-    function updateCat(cat, jumpKey, leftKey, rightKey) {
+        function updateCat(cat, jumpKey, leftKey, rightKey) {
         // 좌우 이동
-        cat.vx = 0;
-        if (game.keyInput[leftKey]) cat.vx = -game.moveSpeed;
-        if (game.keyInput[rightKey]) cat.vx = game.moveSpeed;
+            cat.vx = 0;
+            if (game.keyInput[leftKey]) cat.vx = -game.moveSpeed;
+            if (game.keyInput[rightKey]) cat.vx = game.moveSpeed;
 
-        // 점프
-        if (game.keyInput[jumpKey] && cat.onGround) {
-            cat.vy = game.jumpPower;
+            // 점프
+            if (game.keyInput[jumpKey] && cat.onGround) {
+                cat.vy = game.jumpPower;
+                cat.onGround = false;
+            }
+
+            // 중력 적용
+            cat.vy += game.gravity;
+
+            // 위치 업데이트
+            cat.x += cat.vx;
+            cat.y += cat.vy;
+
+            // 화면 경계 (좌우)
+            if (cat.x < 0) cat.x = 0;
+            if (cat.x + cat.width > canvas.width) cat.x = canvas.width - cat.width;
+
+            // 플랫폼 충돌 처리
             cat.onGround = false;
-        }
+            const platformOffset = 15; // 풀 효과를 고려한 오프셋
+            game.platforms.forEach(platform => {
+                // 고양이가 플랫폼 위에서 떨어지고 있을 때만 충돌 처리
+                if (cat.vy >= 0 && 
+                    cat.x + cat.width > platform.x &&
+                    cat.x < platform.x + platform.width &&
+                    cat.y + cat.height >= platform.y + platformOffset &&
+                    cat.y + cat.height <= platform.y + platformOffset + 20) {
+                        
+                    cat.y = platform.y + platformOffset - cat.height;
+                    cat.vy = 0;
+                    cat.onGround = true;
+                }
+            });
+            // 바닥 위치를 직접 지정
+            const groundY = 660;
 
-        // 중력 적용
-        cat.vy += game.gravity;
-
-        // 위치 업데이트
-        cat.x += cat.vx;
-        cat.y += cat.vy;
-
-        // 화면 경계 (좌우)
-        if (cat.x < 0) cat.x = 0;
-        if (cat.x + cat.width > canvas.width) cat.x = canvas.width - cat.width;
-
-        // 플랫폼 충돌 처리
-        cat.onGround = false;
-        const platformOffset = 15; // 풀 효과를 고려한 오프셋
-        game.platforms.forEach(platform => {
-            // 고양이가 플랫폼 위에서 떨어지고 있을 때만 충돌 처리
-            if (cat.vy >= 0 && 
-                cat.x + cat.width > platform.x &&
-                cat.x < platform.x + platform.width &&
-                cat.y + cat.height >= platform.y + platformOffset &&
-                cat.y + cat.height <= platform.y + platformOffset + 20) {
-                
-                cat.y = platform.y + platformOffset - cat.height;
+            // 바닥 충돌 처리
+            if (cat.y + cat.height >= groundY) {
+                cat.y = groundY - cat.height;
                 cat.vy = 0;
                 cat.onGround = true;
             }
-        });
-        // 바닥 위치를 직접 지정
-        const groundY = 660;
-
-        // 바닥 충돌 처리
-        if (cat.y + cat.height >= groundY) {
-            cat.y = groundY - cat.height;
-            cat.vy = 0;
-            cat.onGround = true;
         }
-    }
 
 
         function checkCollisions() {
             // 열쇠 수집
             game.keys.forEach(key => {
-                if (!key.collected) {
-                    const collector = key.color === 'yellow' ? game.yellowCat : game.grayCat;
-                    if (checkOverlap(collector, key, 30, 30)) {
-                        key.collected = true;
-                        game.keysCollected++;
-                        document.getElementById('keysDisplay').textContent = `${game.keysCollected}/2`;
+            if (!key.collected) {
+                const collector = key.color === 'yellow' ? game.yellowCat : game.grayCat;
+                if (checkOverlap(collector, key, 30, 30)) {
+                    key.collected = true;
+                    game.keysCollected++;
+                    document.getElementById('keysDisplay').textContent = `${game.keysCollected}/1`;
+                
+                    // 열쇠를 모두 수집하면 상자 열기
+                    if (game.keysCollected >= 1) {
+                        game.box.opened = true;
+                        game.yarn.visible = true;
+                        game.yarn.x = game.box.x + 20;
+                        game.yarn.y = game.box.y;
+                        document.getElementById('boxDisplay').textContent = '열림!';
                     }
                 }
-            });
-
-            // 상자
-            if (!game.box.opened) {
-                const boxImg = images.box_close; // 닫힌 상자 이미지
-                if (boxImg && boxImg.complete) {
-                    ctx.drawImage(boxImg, game.box.x, game.box.y, 74, 46); // 상자 크기에 맞게 조정
-                } else {
-                // 이미지 로드 안되면 임시로 이모티콘
-                    ctx.fillStyle = '#8B4513';
-                    ctx.fillRect(game.box.x, game.box.y, 50, 50);
-                    ctx.fillStyle = 'white';
-                    ctx.font = '30px Arial';
-                    ctx.fillText('📦', game.box.x + 5, game.box.y + 38);
-                }
-                } else {
-                // 상자가 열렸을 때
-                    const boxOpenImg = images.box_open; // 열린 상자 이미지
-                    if (boxOpenImg && boxOpenImg.complete) {
-                    ctx.drawImage(boxOpenImg, game.box.x, game.box.y, 74, 46);
-                }
             }
+        });
 
-            // 털뭉치 획득
-            if (game.yarn.visible) {
-                if (checkOverlap(game.yellowCat, game.yarn, 40, 40) || 
-                    checkOverlap(game.grayCat, game.yarn, 40, 40)) {
-                    game.yarn.visible = false;
-                    document.getElementById('boxDisplay').textContent = '털뭉치 획득!';
-                }
-            }
-
-            // 골 체크 (털뭉치 획득 후에만)
-            if (!game.yarn.visible && game.box.opened) {
-                game.goals.forEach(goal => {
-                    if (goal.type === 'yellow' && checkOverlap(game.yellowCat, goal, 50, 60)) {
-                        game.yellowCatFinished = true;
-                    }
-                    if (goal.type === 'gray' && checkOverlap(game.grayCat, goal, 50, 60)) {
-                        game.grayCatFinished = true;
-                    }
-                });
-            }
+    // 상자와 고양이 충돌 체크 (열쇠가 있으면 열기)
+    if (!game.box.opened && game.keysCollected >= 1) {
+        if (checkOverlap(game.yellowCat, game.box, 74, 46) || 
+            checkOverlap(game.grayCat, game.box, 74, 46)) {
+            game.box.opened = true;
+            game.yarn.visible = true;
+            game.yarn.x = game.box.x + 20;
+            game.yarn.y = game.box.y;
+            document.getElementById('boxDisplay').textContent = '열림!';
         }
+    }
+
+    // 털뭉치 획득
+    if (game.yarn.visible) {
+        if (checkOverlap(game.yellowCat, game.yarn, 40, 40) || 
+            checkOverlap(game.grayCat, game.yarn, 40, 40)) {
+            game.yarn.visible = false;
+            document.getElementById('boxDisplay').textContent = '털뭉치 획득!';
+        }
+    }
+}
 
         function checkOverlap(cat, obj, width, height) {
             return cat.x < obj.x + width &&
@@ -517,15 +511,17 @@
             updateHearts();
             document.getElementById('keysDisplay').textContent = '0/2';
             document.getElementById('boxDisplay').textContent = '잠김';
-        }
+            }
 
-        // 게임 루프
-        function gameLoop() {
-            update();
-            render();
-            requestAnimationFrame(gameLoop);
-        }
+            // 게임 루프
+            function gameLoop() {
+                update();
+                render();
+                requestAnimationFrame(gameLoop);
+            }
 
-        // 게임 시작
-        gameLoop();
-    </script>
+            // 게임 시작
+            gameLoop();
+        </script>
+    </body>
+</html>
