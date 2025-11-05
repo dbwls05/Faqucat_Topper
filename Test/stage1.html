@@ -328,8 +328,8 @@
                     checkOverlap(game.grayCat, game.box, 74, 46)) {
                     game.box.opened = true;
                     game.yarn.visible = true;
-                    game.yarn.x = game.box.x+10;
-                    game.yarn.y = game.box.y-150;
+                    game.yarn.x = game.box.x + 10;
+                    game.yarn.y = game.box.y - 150;
                     document.getElementById('boxDisplay').textContent = '열림!';
                 }
             }
@@ -435,6 +435,9 @@
         function stageClear() {
             game.running = false;
             showModal('스테이지 클리어!', '털뭉치를 얻었습니다!', '🧶');
+            setTimeout(() => {
+                window.location.href = 'stage2.html';
+            }, 1000);
         }
 
         function gameOver(title, message) {
