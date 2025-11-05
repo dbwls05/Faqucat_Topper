@@ -333,6 +333,30 @@
                         document.getElementById('boxDisplay').textContent = '열림!';
                     }
                 }
+<<<<<<< HEAD
+=======
+            });
+
+            // 상자
+            if (!game.box.opened) {
+                const boxImg = images.box_close.src; // 닫힌 상자 이미지
+                if (boxImg && boxImg.complete) {
+                    ctx.drawImage(boxImg, game.box.x, game.box.y, 74, 46); // 상자 크기에 맞게 조정
+                } else {
+                // 이미지 로드 안되면 임시로 이모티콘
+                    ctx.fillStyle = '#8B4513';
+                    ctx.fillRect(game.box.x, game.box.y, 50, 50);
+                    ctx.fillStyle = 'white';
+                    ctx.font = '30px Arial';
+                    ctx.fillText('📦', game.box.x + 5, game.box.y + 38);
+                }
+                } else {
+                // 상자가 열렸을 때
+                    const boxOpenImg = images.box_open; // 열린 상자 이미지
+                    if (boxOpenImg && boxOpenImg.complete) {
+                    ctx.drawImage(boxOpenImg, game.box.x, game.box.y, 74, 46);
+                }
+>>>>>>> fd9a99f878a91b582713d11cac0921927fa0eb27
             }
         });
 
