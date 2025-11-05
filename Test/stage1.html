@@ -213,8 +213,8 @@
             yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
             grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
             platforms: [
-                { x: 290, y: 468, width: 573, height: 113, image: 'ground1' },
-                { x: 166, y: 373, width: 92, height: 50, image: 'ground3' },
+                { x: 292, y: 512, width: 573, height: 113, image: 'ground1' },
+                { x: 152, y: 474, width: 92, height: 50, image: 'ground3' },
                 { x: 28, y: 277, width: 92, height: 50, image: 'ground3' },
                 { x: 880, y: 298, width: 270, height: 95, image: 'ground2'},
                 { x: 502, y: 190, width: 270, height: 95, image: 'ground2'}
@@ -280,7 +280,23 @@
         if (cat.x < 0) cat.x = 0;
         if (cat.x + cat.width > canvas.width) cat.x = canvas.width - cat.width;
 
-        // 바닥 위치를 직접 지정 (예: 400px)
+        // 플랫폼 충돌 처리
+        cat.onGround = false;
+        const platformOffset = 15; // 풀 효과를 고려한 오프셋
+        game.platforms.forEach(platform => {
+            // 고양이가 플랫폼 위에서 떨어지고 있을 때만 충돌 처리
+            if (cat.vy >= 0 && 
+                cat.x + cat.width > platform.x &&
+                cat.x < platform.x + platform.width &&
+                cat.y + cat.height >= platform.y + platformOffset &&
+                cat.y + cat.height <= platform.y + platformOffset + 20) {
+                
+                cat.y = platform.y + platformOffset - cat.height;
+                cat.vy = 0;
+                cat.onGround = true;
+            }
+        });
+        // 바닥 위치를 직접 지정
         const groundY = 660;
 
         // 바닥 충돌 처리
@@ -288,8 +304,6 @@
             cat.y = groundY - cat.height;
             cat.vy = 0;
             cat.onGround = true;
-        } else {
-            cat.onGround = false;
         }
     }
 
@@ -413,14 +427,17 @@
                 ctx.drawImage(keyImg, key.x, key.y, 26, 40);
                 }
             });
-
-            // 상자
+            
+            // 상자 
             if (!game.box.opened) {
-                ctx.fillStyle = '#8B4513';
-                ctx.fillRect(game.box.x, game.box.y, 50, 50);
-                ctx.fillStyle = 'white';
-                ctx.font = '30px Arial';
-                ctx.fillText('📦', game.box.x + 5, game.box.y + 38);
+                const boxImg = images.box_close; // 닫힌 상자 이미지
+                    ctx.drawImage(boxImg, game.box.x, game.box.y, 74, 46); // 상자 크기에 맞게 조정
+            } else {
+                // 상자가 열렸을 때
+                    const boxOpenImg = images.box_open; // 열린 상자 이미지
+                    if (boxOpenImg && boxOpenImg.complete) {
+                    ctx.drawImage(boxOpenImg, game.box.x, game.box.y, 74, 46);
+                }
             }
 
             // 털뭉치
