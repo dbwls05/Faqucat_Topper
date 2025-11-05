@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facucat</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+
+        .micro-5-regular {
+            font-family: "Micro 5", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        /* ===== 기본 레이아웃 ===== */
+        .container {
+            display: block;
+            margin: 50px;
+        }
+
+        .top-row,
+        .bottom-row {
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .gif {
+            width: 200px;
+            height: 400px;
+            padding: 30px;
+        }
+
+        .ad {
+            height: 200px;
+        }
+
+        /* ===== 게임 화면 ===== */
+        .main-back {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 1200px;
+            height: 750px;
+            overflow: hidden;
+        }
+
+        .main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .main-obj {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        /* ===== 상단 UI ===== */
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: clamp(20px, 3vw, 40px);
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        .main-heart {
+            display: flex;
+            gap: clamp(5px, 1vw, 10px);
+        }
+
+        .main-heart img {
+            width: clamp(30px, 4vw, 50px);
+            height: auto;
+        }
+
+        .main h1 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            color: white;
+            font-size: clamp(24px, 4vw, 48px);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .pause {
+            width: clamp(30px, 4vw, 50px);
+            height: auto;
+            margin-left: auto;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .pause:hover {
+            transform: scale(1.1);
+        }
+
+        /* ===== 팝업 (main-back 안에서만 보이게) ===== */
+        .popup-background {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 20;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .popup {
+            display: flex;
+            width: 500px;
+            height: 300px;
+            padding: 51px 50px 52px 50px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 37px;
+            flex-shrink: 0;
+            border: 10px solid #FFF;
+            background: rgba(255, 255, 255, 0.6);
+
+            /* 그림자 */
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+
+
+        }
+
+        .popup button {
+            font-size: 48px;
+            margin: 10px;
+            padding: 30px 200px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            /* background: rgba(255, 255, 255, 0.6); */
+            background-color: none;
+            
+
+        }
+
+        .retry {
+            color: white;
+            text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.493);
+
+        }
+
+        .retry:hover {
+            transform: scale(1.05);
+            /* background: rgba(255, 255, 255, 0.35); */
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+        }
+
+        .exit {
+            color: white;
+            text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.493);
+
+        }
+
+        .exit:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="top-row">
+            <img src="../img/(광고)물불게임.gif" class="gif" alt="">
+
+            <div class="main-back">
+                <div class="main">
+                    <div class="main-heart">
+                        <img src="../img/채워진하트.png" alt="Heart">
+                        <img src="../img/채워진하트.png" alt="Heart">
+                        <img src="../img/채워진하트.png" alt="Heart">
+                    </div>
+                    <h1 class="micro-5-regular">Stage</h1>
+                    <img src="../img/Stop.png" id="pauseBtn" class="pause" alt="pause">
+                </div>
+
+                <img src="../img/하늘.png" class="main-img" alt="sky">
+
+                <div class="main-obj">
+                    <img src="../img/구름.png" class="main-cloud" alt="cloud">
+                    <img src="../img/지형1.png" class="main-ground" alt="ground">
+                </div>
+
+                <!-- 팝업 (main-back 안에서만 보이게) -->
+                <div class="popup-background" id="popupBackground">
+                    <div class="popup">
+                        <!-- <h1 class="micro-5-regular">PAUSED</h1> -->
+                        <button class="retry micro-5-regular" id="retryBtn">RETRY</button>
+                        <button class="exit micro-5-regular" id="exitBtn">EXIT</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <img src="../img/(광고)라면가게.gif" class="gif">
+        </div>
+
+        <div class="bottom-row">
+            <img src="../img/내가만든거 아님.png" class="ad">
+            <img src="../img/역전재판.png" class="ad">
+        </div>
+    </div>
+
+    <script>
+        const pauseBtn = document.getElementById("pauseBtn");
+        const popupBackground = document.getElementById("popupBackground");
+        const retryBtn = document.getElementById("retryBtn");
+        const exitBtn = document.getElementById("exitBtn");
+
+        // 일시정지 클릭 시 팝업 보이기
+        pauseBtn.addEventListener("click", () => {
+            popupBackground.style.display = "flex";
+        });
+
+        // Retry 클릭 시 새로고침
+        retryBtn.addEventListener("click", () => {
+            location.reload();
+        });
+
+        // Exit 클릭 시 index.html 이동
+        exitBtn.addEventListener("click", () => {
+            location.href = "index.html";
+        });
+    </script>
+</body>
+
+</html>

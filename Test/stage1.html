@@ -309,7 +309,7 @@
 
             // 상자
             if (!game.box.opened) {
-                const boxImg = images.box_close; // 닫힌 상자 이미지
+                const boxImg = images.box_close.src; // 닫힌 상자 이미지
                 if (boxImg && boxImg.complete) {
                     ctx.drawImage(boxImg, game.box.x, game.box.y, 74, 46); // 상자 크기에 맞게 조정
                 } else {
