@@ -335,14 +335,11 @@
             }
 
             // 털뭉치 획득
-            // 털실 획득 시
-            // 털실 획득 시
             if (game.yarn.visible) {
                 if (checkOverlap(game.yellowCat, game.yarn, 40, 40) ||
                     checkOverlap(game.grayCat, game.yarn, 40, 40)) {
 
                     game.yarn.visible = false;
-                    document.getElementById('boxDisplay').textContent = '털뭉치 획득!';
 
                     // 바로 다음 스테이지로 이동
                     window.location.href = 'stage3.html';
@@ -501,8 +498,6 @@
                 running: true
             };
             updateHearts();
-            document.getElementById('keysDisplay').textContent = '0/2';
-            document.getElementById('boxDisplay').textContent = '잠김';
         }
 
         // 게임 루프

@@ -135,6 +135,101 @@
         .ad {
             height: 300px;
         }
+
+        .popup-background {
+            display: none;
+            /* 처음엔 안 보이게 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .clear-popup {
+            width: 500px;
+            height: 300px;
+            padding: 51px 50px 52px 50px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 6px solid white;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+
+        }
+
+        .popup-title {
+            font-size: 96px;
+            color: #0066ff;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+            margin: 0;
+        }
+
+        .clear-items {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .clear-items .item {
+            width: 70px;
+            height: 70px;
+            border: 3px solid white;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .clear-items .item img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .clear-items .empty {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .clear-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0);
+
+        }
+
+        .clear-btns button {
+            font-size: 56px;
+            font-family: "Micro 5", sans-serif;
+            color: white;
+            background: rgba(0, 0, 0, 0);
+            border: none;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+            padding: 10px 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .clear-btns button:hover {
+            transform: scale(1.01);
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
+            border: solid white 5px;
+        }
+
+        .clear-btns button:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
+
+        }
     </style>
 </head>
 
@@ -163,8 +258,21 @@
                     style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100;">
                 </canvas>
             </div>
-            <div id="keysDisplay">0/1</div>
-            <div id="boxDisplay">잠김</div>
+            <div class="popup-background" id="popupBackground" style="display: none;">
+                <div class="clear-popup micro-5-regular">
+                    <h1 class="popup-title">GAME CLEAR</h1>
+                    <div class="clear-items">
+                        <div class="item"><img src="../img/털뭉치_빨강.png" alt="Item 1"></div>
+                        <div class="item empty"></div>
+                        <div class="item empty"></div>
+                    </div>
+
+                    <div class="clear-btns">
+                        <button class="restart" id="retryBtn">RESTART</button>
+                        <button class="next" id="exitBtn">NEXT</button>
+                    </div>
+                </div>
+            </div>
 
             <img src="../img/(광고)라면가게.gif" class="gif">
         </div>
@@ -222,6 +330,10 @@
                 { x: 798, y: 500, width: 92, height: 50, image: 'ground3' },
                 { x: 973, y: 500, width: 92, height: 50, image: 'ground3' },
                 { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
+            ],
+            obstacles: [
+                { x: 400, y: 620, width: 50, height: 50 }, // 예시 장애물
+                { x: 700, y: 580, width: 50, height: 50 }
             ],
             keys: [
                 { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' },
@@ -317,7 +429,6 @@
                     if (checkOverlap(collector, key, 30, 30)) {
                         key.collected = true;
                         game.keysCollected++; // 여기까지만
-                        document.getElementById('keysDisplay').textContent = `${game.keysCollected}/2`;
                     }
                 }
             });
@@ -326,30 +437,35 @@
             if (!game.box.opened && game.keysCollected >= 1) {
                 if (checkOverlap(game.yellowCat, game.box, 74, 46) ||
                     checkOverlap(game.grayCat, game.box, 74, 46)) {
+
                     game.box.opened = true;
                     game.yarn.visible = true;
                     game.yarn.x = game.box.x + 10;
                     game.yarn.y = game.box.y - 150;
-                    document.getElementById('boxDisplay').textContent = '열림!';
                 }
             }
 
+
             // 털뭉치 획득
-            // 털실 획득 시
-            // 털실 획득 시
             if (game.yarn.visible) {
                 if (checkOverlap(game.yellowCat, game.yarn, 40, 40) ||
                     checkOverlap(game.grayCat, game.yarn, 40, 40)) {
-
                     game.yarn.visible = false;
-                    document.getElementById('boxDisplay').textContent = '털뭉치 획득!';
 
-                    // 바로 다음 스테이지로 이동
-                    window.location.href = 'stage3.html';
+                    // 털뭉치 먹으면 클리어 화면
+                    stageClear();
                 }
             }
 
-
+        }
+        function checkObstacleCollisions() {
+            game.obstacles.forEach(obstacle => {
+                if (checkOverlap(game.yellowCat, obstacle, obstacle.width, obstacle.height) ||
+                    checkOverlap(game.grayCat, obstacle, obstacle.width, obstacle.height)) {
+                    // 장애물에 닿으면 게임 리스타트
+                    restartGame();
+                }
+            });
         }
 
         function checkOverlap(cat, obj, width, height) {
@@ -390,6 +506,7 @@
             updateCat(game.grayCat, 'ArrowUp', 'ArrowLeft', 'ArrowRight');
 
             checkCollisions();
+            checkObstacleCollisions();
 
             // 클리어 체크
             if (game.yellowCatFinished && game.grayCatFinished) {
@@ -440,17 +557,13 @@
 
         }
 
+        let stageCleared = false;
+
         function stageClear() {
-            // 팝업 보여주기
-            showModal('스테이지 클리어!', '털뭉치를 얻었습니다!', '🧶');
-
-            // 고양이 움직임 멈추고 싶으면 running false
+            if (stageCleared) return; // 이미 클리어 됐으면 더 이상 실행하지 않음
+            stageCleared = true;
             game.running = false;
-
-            // 1초 뒤 다음 스테이지로 이동
-            setTimeout(() => {
-                window.location.href = 'stage3.html';
-            }, 1000);
+            document.getElementById('popupBackground').style.display = 'flex';
         }
 
         function gameOver(title, message) {
@@ -469,18 +582,52 @@
             document.getElementById('gameModal').classList.remove('active');
         }
 
+        const stopBtn = document.querySelector('.stop');
+        stopBtn.addEventListener('click', () => {
+            game.running = !game.running; // 토글: running = false → 일시정지, true → 재개
+            if (!game.running) {
+                // 일시정지 화면 표시
+                document.getElementById('popupBackground').style.display = 'flex';
+                document.getElementById('popupBackground').innerHTML = `
+            <div class="clear-popup micro-5-regular">
+                <h1 class="popup-title">PAUSE</h1>
+                <div class="clear-btns">
+                    <button id="resumeBtn">RESUME</button>
+                </div>
+            </div>
+        `;
+                document.getElementById('resumeBtn').addEventListener('click', () => {
+                    document.getElementById('popupBackground').style.display = 'none';
+                    game.running = true;
+                });
+            }
+        });
+
+
         function restartGame() {
+            stageCleared = false; 
             game = {
                 yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
                 grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
                 platforms: [
-                    { x: 209, y: 485, width: 92, height: 50, image: ground1 }
+                    { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
+                    { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
+                    { x: 624, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 798, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 973, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
+                ],
+                obstacles: [
+                    { x: 400, y: 620, width: 50, height: 50 }, // 예시 장애물
+                    { x: 700, y: 580, width: 50, height: 50 }
                 ],
                 keys: [
-                    { x: 60, y: 130, collected: false, color: 'yellow', image: 'key' },
-                    { x: 60, y: 130, collected: false, color: 'yellow', image: 'light' },
+                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' },
+                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'light' },
                 ],
-                box: { x: 963, y: 199, opened: false, image: 'box_close' },
+                box: { x: 950, y: 185, opened: false, image: 'box_close' },
                 yarn: { x: 0, y: 0, visible: false },
                 keyInput: {},
                 lives: 3,
@@ -494,8 +641,6 @@
                 running: true
             };
             updateHearts();
-            document.getElementById('keysDisplay').textContent = '0/2';
-            document.getElementById('boxDisplay').textContent = '잠김';
         }
 
         // 게임 루프
