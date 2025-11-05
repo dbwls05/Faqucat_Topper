@@ -474,13 +474,20 @@
                 yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
                 grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
                 platforms: [
-                    { x: 209, y: 485, width: 92, height: 50, image: ground1 }
+                    { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
+                    { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
+                    { x: 624, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 798, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 973, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
                 ],
                 keys: [
-                    { x: 60, y: 130, collected: false, color: 'yellow', image: 'key' },
-                    { x: 60, y: 130, collected: false, color: 'yellow', image: 'light' },
+                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' },
+                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'light' },
                 ],
-                box: { x: 963, y: 199, opened: false, image: 'box_close' },
+                box: { x: 950, y: 185, opened: false, image: 'box_close' },
                 yarn: { x: 0, y: 0, visible: false },
                 keyInput: {},
                 lives: 3,
@@ -493,10 +500,11 @@
                 grayCatFinished: false,
                 running: true
             };
-            updateHearts();
-            document.getElementById('keysDisplay').textContent = '0/2';
-            document.getElementById('boxDisplay').textContent = '잠김';
-        }
+        };
+        updateHearts();
+        document.getElementById('keysDisplay').textContent = '0/2';
+        document.getElementById('boxDisplay').textContent = '잠김';
+    
 
         // 게임 루프
         function gameLoop() {

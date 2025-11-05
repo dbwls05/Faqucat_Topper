@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facucat</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+
+        /* ===== 폰트 ===== */
+        .micro-5-regular {
+            font-family: "Micro 5", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        /* ===== 공통 구조 ===== */
+        .container {
+            display: block;
+            margin: 50px;
+        }
+
+        .top-row,
+        .bottom-row {
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .gif {
+            width: 200px;
+            height: 400px;
+            padding: 30px;
+        }
+
+        .ad {
+            height: 200px;
+        }
+
+        /* ===== 게임 배경 영역 유지 ===== */
+        .main-back {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            width: 100%;
+            max-width: var(--main-max-width);
+        }
+
+        .main-img {
+            width: 1200px;
+            height: 750px;
+            position: relative;
+        }
+
+        .main-obj {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1200px;
+            height: 750px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 0;
+        }
+
+        .main-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 1200px;
+        }
+
+        /* ===== 게임 상단 UI ===== */
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: clamp(20px, 3vw, 40px);
+            z-index: 1;
+            box-sizing: border-box;
+        }
+
+        .main-heart {
+            display: flex;
+            gap: clamp(5px, 1vw, 10px);
+            z-index: 2;
+        }
+
+        .main-heart img {
+            width: clamp(30px, 4vw, 50px);
+            height: auto;
+            z-index: 2;
+        }
+
+        .main h1 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            color: white;
+            font-size: clamp(24px, 4vw, 48px);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .stop {
+            width: clamp(30px, 4vw, 50px);
+            height: auto;
+            margin-left: auto;
+            z-index: 3;
+        }
+
+        /* ===== 이미지 영역 ===== */
+        .gif {
+            width: 300px;
+            height: 500px;
+            padding: 30px;
+        }
+
+        .ad {
+            height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="top-row">
+            <img src="../img/(광고)물불게임.gif" class="gif" alt="">
+
+            <div class="main-back">
+                <div class="main">
+                    <div class="main-heart">
+                        <img src="../img/채워진하트.png" alt="Heart">
+                        <img src="../img/채워진하트.png" alt="Heart">
+                        <img src="../img/채워진하트.png" alt="Heart">
+                    </div>
+                    <h1 class="micro-5-regular">Stage</h1>
+                    <img src="../img/Stop.png" class="stop" alt="Stop">
+                </div>
+                <img src="../img/하늘.png" class="main-img" alt="">
+                <div class="main-obj">
+                    <img src="../img/구름.png" class="main-cloud" alt="">
+                    <img src="../img/지형1.png" class="main-ground" alt="">
+                </div>
+                <canvas id="gameCanvas" width="1200" height="750"
+                    style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100;">
+                </canvas>
+            </div>
+            <div id="keysDisplay">0/1</div>
+            <div id="boxDisplay">잠김</div>
+
+            <img src="../img/(광고)라면가게.gif" class="gif">
+        </div>
+        <div class="bottom-row">
+            <img src="../img/내가만든거 아님.png" class="ad" alt="">
+            <img src="../img/역전재판.png" class="ad" alt="">
+        </div>
+    </div>
+
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 이미지 로드
+        const images = {
+
+            yellowCat: new Image(),
+            grayCat: new Image(),
+            key: new Image(),
+            key_get: new Image(),
+            box_open: new Image(),
+            box_close: new Image(),
+            box: new Image(),
+            yarn: new Image(),
+            ground1: new Image(),
+            ground2: new Image(),
+            ground3: new Image(),
+            ground4: new Image(),
+            light: new Image()
+        };
+
+        images.yellowCat.src = '../img/치즈냥.gif';
+        images.grayCat.src = '../img/회색냥.gif';
+        images.key.src = '../img/열쇠.gif';
+        images.key_get.src = '../img/열쇠.png';
+        images.box_open.src = '../img/보물상자_open.png';
+        images.box_close.src = '../img/보물상자_close.png',
+            images.ground1.src = '../img/땅_long.png';
+        images.ground2.src = '../img/땅_middle.png';
+        images.ground3.src = '../img/땅_short.png';
+        images.ground4.src = '../img/땅.png';
+        images.light.src = '../img/light.png';
+        images.yarn.src = '../img/털뭉치_노랑.png';
+
+        let game = {
+            yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
+            grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
+            platforms: [
+                { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
+                { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
+                { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
+                { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
+                { x: 624, y: 500, width: 92, height: 50, image: 'ground3' },
+                { x: 798, y: 500, width: 92, height: 50, image: 'ground3' },
+                { x: 973, y: 500, width: 92, height: 50, image: 'ground3' },
+                { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
+            ],
+            keys: [
+                { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' },
+                { x: 493, y: 180, collected: false, color: 'yellow', image: 'light' },
+            ],
+            box: { x: 950, y: 185, opened: false, image: 'box_close' },
+            yarn: { x: 0, y: 0, visible: false },
+            keyInput: {},
+            lives: 3,
+            gravity: 0.6,
+            jumpPower: -13,
+            moveSpeed: 6,
+            gameStartTime: Date.now(),
+            keysCollected: 0,
+            yellowCatFinished: false,
+            grayCatFinished: false,
+            running: true
+        };
+
+        // 키 입력
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            game.keyInput[key] = true;
+            if (e.key.startsWith('Arrow')) {
+                game.keyInput[e.key] = true;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            game.keyInput[key] = false;
+            if (e.key.startsWith('Arrow')) {
+                game.keyInput[e.key] = false;
+            }
+        });
+
+        function updateCat(cat, jumpKey, leftKey, rightKey) {
+            // 좌우 이동
+            cat.vx = 0;
+            if (game.keyInput[leftKey]) cat.vx = -game.moveSpeed;
+            if (game.keyInput[rightKey]) cat.vx = game.moveSpeed;
+
+            // 점프
+            if (game.keyInput[jumpKey] && cat.onGround) {
+                cat.vy = game.jumpPower;
+                cat.onGround = false;
+            }
+
+            // 중력 적용
+            cat.vy += game.gravity;
+
+            // 위치 업데이트
+            cat.x += cat.vx;
+            cat.y += cat.vy;
+
+            // 화면 경계 (좌우)
+            if (cat.x < 0) cat.x = 0;
+            if (cat.x + cat.width > canvas.width) cat.x = canvas.width - cat.width;
+
+            // 플랫폼 충돌 처리
+            cat.onGround = false;
+            const platformOffset = 15; // 풀 효과를 고려한 오프셋
+            game.platforms.forEach(platform => {
+                // 고양이가 플랫폼 위에서 떨어지고 있을 때만 충돌 처리
+                if (cat.vy >= 0 &&
+                    cat.x + cat.width > platform.x &&
+                    cat.x < platform.x + platform.width &&
+                    cat.y + cat.height >= platform.y + platformOffset &&
+                    cat.y + cat.height <= platform.y + platformOffset + 20) {
+
+                    cat.y = platform.y + platformOffset - cat.height;
+                    cat.vy = 0;
+                    cat.onGround = true;
+                }
+            });
+            // 바닥 위치를 직접 지정
+            const groundY = 660;
+
+            // 바닥 충돌 처리
+            if (cat.y + cat.height >= groundY) {
+                cat.y = groundY - cat.height;
+                cat.vy = 0;
+                cat.onGround = true;
+            }
+        }
+
+
+        function checkCollisions() {
+            // 열쇠 수집
+            game.keys.forEach(key => {
+                if (!key.collected) {
+                    const collector = key.color === 'yellow' ? game.yellowCat : game.grayCat;
+                    if (checkOverlap(collector, key, 30, 30)) {
+                        key.collected = true;
+                        game.keysCollected++; // 여기까지만
+                        document.getElementById('keysDisplay').textContent = `${game.keysCollected}/2`;
+                    }
+                }
+            });
+
+            // 상자와 고양이 충돌 체크 (열쇠가 있으면 열기)
+            if (!game.box.opened && game.keysCollected >= 1) {
+                if (checkOverlap(game.yellowCat, game.box, 74, 46) ||
+                    checkOverlap(game.grayCat, game.box, 74, 46)) {
+                    game.box.opened = true;
+                    game.yarn.visible = true;
+                    game.yarn.x = game.box.x + 10;
+                    game.yarn.y = game.box.y - 150;
+                    document.getElementById('boxDisplay').textContent = '열림!';
+                }
+            }
+
+            // 털뭉치 획득
+            // 털실 획득 시
+            // 털실 획득 시
+            if (game.yarn.visible) {
+                if (checkOverlap(game.yellowCat, game.yarn, 40, 40) ||
+                    checkOverlap(game.grayCat, game.yarn, 40, 40)) {
+
+                    game.yarn.visible = false;
+                    document.getElementById('boxDisplay').textContent = '털뭉치 획득!';
+
+                    // 바로 다음 스테이지로 이동
+                    window.location.href = 'stage3.html';
+                }
+            }
+
+
+        }
+
+        function checkOverlap(cat, obj, width, height) {
+            return cat.x < obj.x + width &&
+                cat.x + cat.width > obj.x &&
+                cat.y < obj.y + height &&
+                cat.y + cat.height > obj.y;
+        }
+
+        function loseLife(message) {
+            game.lives--;
+            updateHearts();
+
+            if (game.lives <= 0) {
+                gameOver('게임 오버!', message);
+            } else {
+                // 고양이 위치 초기화
+                game.yellowCat.x = 50;
+                game.yellowCat.y = 670;
+                game.grayCat.x = 1100;
+                game.grayCat.y = 670;
+            }
+        }
+
+        function updateHearts() {
+            const heartsDiv = document.getElementById('hearts');
+            heartsDiv.innerHTML = '';
+            for (let i = 0; i < game.lives; i++) {
+                heartsDiv.innerHTML += `<img src="../img/채워진하트.png" alt="Heart" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'red\\'%3E%3Cpath d=\\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\\'/%3E%3C/svg%3E'">`;
+            }
+        }
+
+        function update() {
+            if (!game.running) return;
+
+            // 고양이 업데이트
+            updateCat(game.yellowCat, 'w', 'a', 'd');
+            updateCat(game.grayCat, 'ArrowUp', 'ArrowLeft', 'ArrowRight');
+
+            checkCollisions();
+
+            // 클리어 체크
+            if (game.yellowCatFinished && game.grayCatFinished) {
+                stageClear();
+            }
+        }
+
+        function render() {
+            // 배경 투명 (배경 이미지가 보이도록)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 플랫폼
+            game.platforms.forEach(platform => {
+                const img = images[platform.image];
+
+                ctx.drawImage(img, platform.x, platform.y, platform.width, platform.height);
+            });
+
+            // 열쇠
+            game.keys.forEach(key => {
+                if (!key.collected) {
+                    const keyImg = images.key; // 열쇠 이미지 사용
+                    ctx.drawImage(keyImg, key.x, key.y, 26, 40);
+                }
+            });
+
+            // 상자 
+            if (!game.box.opened) {
+                const boxImg = images.box_close; // 닫힌 상자 이미지
+                ctx.drawImage(boxImg, game.box.x, game.box.y, 74, 46); // 상자 크기에 맞게 조정
+            } else {
+                // 상자가 열렸을 때
+                const boxOpenImg = images.box_open; // 열린 상자 이미지
+                if (boxOpenImg && boxOpenImg.complete) {
+                    ctx.drawImage(boxOpenImg, game.box.x, game.box.y - 30, 74, 74);
+                }
+            }
+
+            // 털뭉치
+            if (game.yarn.visible) {
+                const yarnImg = images.yarn;
+                if (yarnImg && yarnImg.complete) {
+                    ctx.drawImage(yarnImg, game.yarn.x, game.yarn.y, 50, 50); // 원하는 크기로
+                }
+            }
+            ctx.drawImage(images.yellowCat, game.yellowCat.x, game.yellowCat.y, game.yellowCat.width, game.yellowCat.height);
+            ctx.drawImage(images.grayCat, game.grayCat.x, game.grayCat.y, game.grayCat.width, game.grayCat.height);
+
+        }
+
+        function stageClear() {
+            // 팝업 보여주기
+            showModal('스테이지 클리어!', '털뭉치를 얻었습니다!', '🧶');
+
+            // 고양이 움직임 멈추고 싶으면 running false
+            game.running = false;
+
+            // 1초 뒤 다음 스테이지로 이동
+            setTimeout(() => {
+                window.location.href = 'stage3.html';
+            }, 1000);
+        }
+
+        function gameOver(title, message) {
+            game.running = false;
+            showModal(title, message, '💀');
+        }
+
+        function showModal(title, message, icon) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modalItems').textContent = icon;
+            document.getElementById('gameModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('gameModal').classList.remove('active');
+        }
+
+        function restartGame() {
+            game = {
+                yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
+                grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
+                platforms: [
+                    { x: 209, y: 485, width: 92, height: 50, image: ground1 }
+                ],
+                keys: [
+                    { x: 60, y: 130, collected: false, color: 'yellow', image: 'key' },
+                    { x: 60, y: 130, collected: false, color: 'yellow', image: 'light' },
+                ],
+                box: { x: 963, y: 199, opened: false, image: 'box_close' },
+                yarn: { x: 0, y: 0, visible: false },
+                keyInput: {},
+                lives: 3,
+                gravity: 0.6,
+                jumpPower: -13,
+                moveSpeed: 6,
+                gameStartTime: Date.now(),
+                keysCollected: 0,
+                yellowCatFinished: false,
+                grayCatFinished: false,
+                running: true
+            };
+            updateHearts();
+            document.getElementById('keysDisplay').textContent = '0/2';
+            document.getElementById('boxDisplay').textContent = '잠김';
+        }
+
+        // 게임 루프
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // 게임 시작
+        gameLoop();
+    </script>
+</body>
+
+</html>
