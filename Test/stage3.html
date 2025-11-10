@@ -33,17 +33,7 @@
             position: relative;
         }
 
-        .gif {
-            width: 200px;
-            height: 400px;
-            padding: 30px;
-        }
-
-        .ad {
-            height: 200px;
-        }
-
-        /* ===== 게임 배경 영역 유지 ===== */
+        /* ===== 게임 배경 영역 ===== */
         .main-back {
             position: relative;
             display: flex;
@@ -122,10 +112,11 @@
             width: clamp(30px, 4vw, 50px);
             height: auto;
             margin-left: auto;
+            cursor: pointer;
             z-index: 3;
         }
 
-        /* ===== 이미지 영역 ===== */
+        /* ===== 광고 영역 ===== */
         .gif {
             width: 300px;
             height: 500px;
@@ -136,9 +127,9 @@
             height: 300px;
         }
 
+        /* ===== 팝업 ===== */
         .popup-background {
             display: none;
-            /* 처음엔 안 보이게 */
             position: absolute;
             top: 0;
             left: 0;
@@ -162,7 +153,6 @@
             align-items: center;
             justify-content: center;
             gap: 25px;
-
         }
 
         .popup-title {
@@ -203,7 +193,6 @@
             gap: 10px;
             align-items: center;
             background-color: rgba(0, 0, 0, 0);
-
         }
 
         .clear-btns button {
@@ -228,13 +217,11 @@
             transform: scale(0.95);
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
-
         }
     </style>
 </head>
 
 <body>
-
     <div class="container">
         <div class="top-row">
             <img src="../img/(광고)물불게임.gif" class="gif" alt="">
@@ -242,12 +229,10 @@
             <div class="main-back">
                 <div class="main">
                     <div class="main-heart">
-                        <img src="../img/채워진하트.png" alt="Heart">
-                        <img src="../img/채워진하트.png" alt="Heart">
-                        <img src="../img/채워진하트.png" alt="Heart">
+                        <div class="main-heart" id="heartContainer"></div>
                     </div>
                     <h1 class="micro-5-regular">Stage</h1>
-                    <img src="../img/Stop.png" class="stop" alt="Stop">
+                    <img src="../img/Stop.png" class="stop" alt="Stop" id="stopBtn">
                 </div>
                 <img src="../img/하늘.png" class="main-img" alt="">
                 <div class="main-obj">
@@ -258,7 +243,8 @@
                     style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100;">
                 </canvas>
             </div>
-            <div class="popup-background" id="popupBackground" style="display: none;">
+
+            <div class="popup-background" id="popupBackground">
                 <div class="clear-popup micro-5-regular">
                     <h1 class="popup-title">GAME CLEAR</h1>
                     <div class="clear-items">
@@ -266,10 +252,9 @@
                         <div class="item empty"></div>
                         <div class="item empty"></div>
                     </div>
-
                     <div class="clear-btns">
-                        <button class="restart" id="retryBtn">RESTART</button>
-                        <button class="next" id="exitBtn">NEXT</button>
+                        <button id="restartBtn">RESTART</button>
+                        <button id="nextBtn">NEXT</button>
                     </div>
                 </div>
             </div>
@@ -282,78 +267,80 @@
         </div>
     </div>
 
-
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
         // 이미지 로드
         const images = {
-
             yellowCat: new Image(),
             grayCat: new Image(),
             key: new Image(),
-            key_get: new Image(),
             box_open: new Image(),
             box_close: new Image(),
-            box: new Image(),
             yarn: new Image(),
             ground1: new Image(),
             ground2: new Image(),
             ground3: new Image(),
             ground4: new Image(),
-            light: new Image()
+            water1: new Image(),
+            water2: new Image(),
+            heart_full: new Image(),
+            heart_empty: new Image()
         };
 
         images.yellowCat.src = '../img/치즈냥.gif';
         images.grayCat.src = '../img/회색냥.gif';
         images.key.src = '../img/열쇠.gif';
-        images.key_get.src = '../img/열쇠.png';
         images.box_open.src = '../img/보물상자_open.png';
-        images.box_close.src = '../img/보물상자_close.png',
-            images.ground1.src = '../img/땅_long.png';
+        images.box_close.src = '../img/보물상자_close.png';
+        images.ground1.src = '../img/땅_long.png';
         images.ground2.src = '../img/땅_middle.png';
         images.ground3.src = '../img/땅_short.png';
         images.ground4.src = '../img/땅.png';
-        images.light.src = '../img/light.png';
         images.yarn.src = '../img/털뭉치_노랑.png';
+        images.water1.src = '../img/물.png';
+        images.water2.src = '../img/물2.png';
+        images.heart_full.src = "../img/채워진하트.png";
+        images.heart_empty.src = "../img/빈하트.png";
 
-        let game = {
-            yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
-            grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
-            platforms: [
-                { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
-                { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
-                { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
-                { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
-                { x: 624, y: 500, width: 92, height: 50, image: 'ground3' },
-                { x: 798, y: 500, width: 92, height: 50, image: 'ground3' },
-                { x: 973, y: 500, width: 92, height: 50, image: 'ground3' },
-                { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
-            ],
-            obstacles: [
-                { x: 400, y: 620, width: 50, height: 50 }, // 예시 장애물
-                { x: 700, y: 580, width: 50, height: 50 }
-            ],
-            keys: [
-                { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' },
-                { x: 493, y: 180, collected: false, color: 'yellow', image: 'light' },
-            ],
-            box: { x: 950, y: 185, opened: false, image: 'box_close' },
-            yarn: { x: 0, y: 0, visible: false },
-            keyInput: {},
-            lives: 3,
-            gravity: 0.6,
-            jumpPower: -13,
-            moveSpeed: 6,
-            gameStartTime: Date.now(),
-            keysCollected: 0,
-            yellowCatFinished: false,
-            grayCatFinished: false,
-            running: true
-        };
+        // 게임 상태 초기화 함수
+        function createInitialGameState() {
+            return {
+                yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
+                grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
+                platforms: [
+                    { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
+                    { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
+                    { x: 624, y: 500, width: 72, height: 50, image: 'ground3' },
+                    { x: 973, y: 500, width: 72, height: 50, image: 'ground3' },
+                    { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
+                ],
+                obstacles: [
+                    { x: 200, y: 640, width: 292, height: 73, image: 'water2' },
+                    { x: 700, y: 640, width: 292, height: 73, image: 'water2' }
+                ],
+                keys: [
+                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' }
+                ],
+                box: { x: 950, y: 185, opened: false },
+                yarn: { x: 0, y: 0, visible: false },
+                keyInput: {},
+                lives: 3,
+                gravity: 0.6,
+                jumpPower: -13,
+                moveSpeed: 6,
+                keysCollected: 0,
+                running: true,
+                stageCleared: false
+            };
+        }
 
-        // 키 입력
+        let game = createInitialGameState();
+
+        // 키 입력 이벤트
         document.addEventListener('keydown', (e) => {
             const key = e.key.toLowerCase();
             game.keyInput[key] = true;
@@ -370,49 +357,40 @@
             }
         });
 
+        // 고양이 업데이트
         function updateCat(cat, jumpKey, leftKey, rightKey) {
-            // 좌우 이동
             cat.vx = 0;
             if (game.keyInput[leftKey]) cat.vx = -game.moveSpeed;
             if (game.keyInput[rightKey]) cat.vx = game.moveSpeed;
 
-            // 점프
             if (game.keyInput[jumpKey] && cat.onGround) {
                 cat.vy = game.jumpPower;
                 cat.onGround = false;
             }
 
-            // 중력 적용
             cat.vy += game.gravity;
-
-            // 위치 업데이트
             cat.x += cat.vx;
             cat.y += cat.vy;
 
-            // 화면 경계 (좌우)
             if (cat.x < 0) cat.x = 0;
             if (cat.x + cat.width > canvas.width) cat.x = canvas.width - cat.width;
 
-            // 플랫폼 충돌 처리
             cat.onGround = false;
-            const platformOffset = 15; // 풀 효과를 고려한 오프셋
+            const platformOffset = 15;
+
             game.platforms.forEach(platform => {
-                // 고양이가 플랫폼 위에서 떨어지고 있을 때만 충돌 처리
                 if (cat.vy >= 0 &&
                     cat.x + cat.width > platform.x &&
                     cat.x < platform.x + platform.width &&
                     cat.y + cat.height >= platform.y + platformOffset &&
                     cat.y + cat.height <= platform.y + platformOffset + 20) {
-
                     cat.y = platform.y + platformOffset - cat.height;
                     cat.vy = 0;
                     cat.onGround = true;
                 }
             });
-            // 바닥 위치를 직접 지정
-            const groundY = 660;
 
-            // 바닥 충돌 처리
+            const groundY = 660;
             if (cat.y + cat.height >= groundY) {
                 cat.y = groundY - cat.height;
                 cat.vy = 0;
@@ -420,54 +398,7 @@
             }
         }
 
-
-        function checkCollisions() {
-            // 열쇠 수집
-            game.keys.forEach(key => {
-                if (!key.collected) {
-                    const collector = key.color === 'yellow' ? game.yellowCat : game.grayCat;
-                    if (checkOverlap(collector, key, 30, 30)) {
-                        key.collected = true;
-                        game.keysCollected++; // 여기까지만
-                    }
-                }
-            });
-
-            // 상자와 고양이 충돌 체크 (열쇠가 있으면 열기)
-            if (!game.box.opened && game.keysCollected >= 1) {
-                if (checkOverlap(game.yellowCat, game.box, 74, 46) ||
-                    checkOverlap(game.grayCat, game.box, 74, 46)) {
-
-                    game.box.opened = true;
-                    game.yarn.visible = true;
-                    game.yarn.x = game.box.x + 10;
-                    game.yarn.y = game.box.y - 150;
-                }
-            }
-
-
-            // 털뭉치 획득
-            if (game.yarn.visible) {
-                if (checkOverlap(game.yellowCat, game.yarn, 40, 40) ||
-                    checkOverlap(game.grayCat, game.yarn, 40, 40)) {
-                    game.yarn.visible = false;
-
-                    // 털뭉치 먹으면 클리어 화면
-                    stageClear();
-                }
-            }
-
-        }
-        function checkObstacleCollisions() {
-            game.obstacles.forEach(obstacle => {
-                if (checkOverlap(game.yellowCat, obstacle, obstacle.width, obstacle.height) ||
-                    checkOverlap(game.grayCat, obstacle, obstacle.width, obstacle.height)) {
-                    // 장애물에 닿으면 게임 리스타트
-                    restartGame();
-                }
-            });
-        }
-
+        // 충돌 체크 헬퍼 함수
         function checkOverlap(cat, obj, width, height) {
             return cat.x < obj.x + width &&
                 cat.x + cat.width > obj.x &&
@@ -475,173 +406,164 @@
                 cat.y + cat.height > obj.y;
         }
 
-        function loseLife(message) {
-            game.lives--;
-            updateHearts();
+        // 충돌 감지
+        function checkCollisions() {
+            if (game.stageCleared) return;
+            // 열쇠 수집
+            game.keys.forEach(key => {
+                if (!key.collected) {
+                    const collector = key.color === 'yellow' ? game.yellowCat : game.grayCat;
+                    if (checkOverlap(collector, key, 30, 30)) {
+                        key.collected = true;
+                        game.keysCollected++;
+                    }
+                }
+            });
 
-            if (game.lives <= 0) {
-                gameOver('게임 오버!', message);
-            } else {
-                // 고양이 위치 초기화
-                game.yellowCat.x = 50;
-                game.yellowCat.y = 670;
-                game.grayCat.x = 1100;
-                game.grayCat.y = 670;
+            // 상자 열기
+            if (!game.box.opened && game.keysCollected >= 1) {
+                if (checkOverlap(game.yellowCat, game.box, 74, 46) ||
+                    checkOverlap(game.grayCat, game.box, 74, 46)) {
+                    game.box.opened = true;
+                    game.yarn.visible = true;
+                    game.yarn.x = game.box.x + 10;
+                    game.yarn.y = game.box.y - 150;
+                }
             }
+
+            // 털뭉치 획득
+            if (game.yarn.visible) {
+                if (checkOverlap(game.yellowCat, game.yarn, 40, 40) ||
+                    checkOverlap(game.grayCat, game.yarn, 40, 40)) {
+                    game.yarn.visible = false;
+                    stageClear();
+                    return;
+                }
+            }
+
+            // 장애물 충돌
+            game.obstacles.forEach(obstacle => {
+                if (checkOverlap(game.yellowCat, obstacle, obstacle.width, obstacle.height) ||
+                    checkOverlap(game.grayCat, obstacle, obstacle.width, obstacle.height)) {
+
+                    game.lives--;
+
+                    if (game.lives > 0) {
+                        // 남은 목숨이 있으면 캐릭터만 초기 위치로 복귀
+                        game.yellowCat.x = 50; game.yellowCat.y = 670; game.yellowCat.vy = 0;
+                        game.grayCat.x = 1100; game.grayCat.y = 670; game.grayCat.vy = 0;
+                    } else {
+                        // 목숨이 모두 소진되면 게임 오버
+                        gameOver();
+                    }
+                }
+            });
+
         }
 
-        function updateHearts() {
-            const heartsDiv = document.getElementById('hearts');
-            heartsDiv.innerHTML = '';
-            for (let i = 0; i < game.lives; i++) {
-                heartsDiv.innerHTML += `<img src="../img/채워진하트.png" alt="Heart" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'red\\'%3E%3Cpath d=\\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\\'/%3E%3C/svg%3E'">`;
-            }
-        }
-
+        // 게임 업데이트
         function update() {
             if (!game.running) return;
 
-            // 고양이 업데이트
             updateCat(game.yellowCat, 'w', 'a', 'd');
             updateCat(game.grayCat, 'ArrowUp', 'ArrowLeft', 'ArrowRight');
-
             checkCollisions();
-            checkObstacleCollisions();
-
-            // 클리어 체크
-            if (game.yellowCatFinished && game.grayCatFinished) {
-                stageClear();
-            }
         }
 
+        // 렌더링
         function render() {
-            // 배경 투명 (배경 이미지가 보이도록)
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // 플랫폼
             game.platforms.forEach(platform => {
-                const img = images[platform.image];
-
-                ctx.drawImage(img, platform.x, platform.y, platform.width, platform.height);
+                ctx.drawImage(images[platform.image], platform.x, platform.y, platform.width, platform.height);
             });
 
             // 열쇠
             game.keys.forEach(key => {
                 if (!key.collected) {
-                    const keyImg = images.key; // 열쇠 이미지 사용
-                    ctx.drawImage(keyImg, key.x, key.y, 26, 40);
+                    ctx.drawImage(images.key, key.x, key.y, 26, 40);
                 }
             });
 
-            // 상자 
-            if (!game.box.opened) {
-                const boxImg = images.box_close; // 닫힌 상자 이미지
-                ctx.drawImage(boxImg, game.box.x, game.box.y, 74, 46); // 상자 크기에 맞게 조정
-            } else {
-                // 상자가 열렸을 때
-                const boxOpenImg = images.box_open; // 열린 상자 이미지
-                if (boxOpenImg && boxOpenImg.complete) {
-                    ctx.drawImage(boxOpenImg, game.box.x, game.box.y - 30, 74, 74);
-                }
-            }
+            // 이미지 로드
+            game.obstacles.forEach(obstacle => {
+                ctx.drawImage(images[obstacle.image], obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+
+            game.obstacles.forEach(obstacle => {
+                ctx.drawImage(images[obstacle.image], obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+
+            // 상자
+            const boxImg = game.box.opened ? images.box_open : images.box_close;
+            const boxY = game.box.opened ? game.box.y - 30 : game.box.y;
+            const boxHeight = game.box.opened ? 74 : 46;
+            ctx.drawImage(boxImg, game.box.x, boxY, 74, boxHeight);
 
             // 털뭉치
             if (game.yarn.visible) {
-                const yarnImg = images.yarn;
-                if (yarnImg && yarnImg.complete) {
-                    ctx.drawImage(yarnImg, game.yarn.x, game.yarn.y, 50, 50); // 원하는 크기로
-                }
+                ctx.drawImage(images.yarn, game.yarn.x, game.yarn.y, 50, 50);
             }
+
+            renderHearts();
+
+            // 고양이
             ctx.drawImage(images.yellowCat, game.yellowCat.x, game.yellowCat.y, game.yellowCat.width, game.yellowCat.height);
             ctx.drawImage(images.grayCat, game.grayCat.x, game.grayCat.y, game.grayCat.width, game.grayCat.height);
-
         }
 
-        let stageCleared = false;
-
+        // 스테이지 클리어
         function stageClear() {
-            if (stageCleared) return; // 이미 클리어 됐으면 더 이상 실행하지 않음
-            stageCleared = true;
+            if (game.stageCleared) return;
+            game.stageCleared = true;
             game.running = false;
             document.getElementById('popupBackground').style.display = 'flex';
         }
 
-        function gameOver(title, message) {
-            game.running = false;
-            showModal(title, message, '💀');
+        // 게임 재시작
+        function restartGame() {
+            document.getElementById('popupBackground').style.display = 'none';
+            game = createInitialGameState();
         }
 
-        function showModal(title, message, icon) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalMessage').textContent = message;
-            document.getElementById('modalItems').textContent = icon;
-            document.getElementById('gameModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('gameModal').classList.remove('active');
-        }
-
-        const stopBtn = document.querySelector('.stop');
-        stopBtn.addEventListener('click', () => {
-            game.running = !game.running; // 토글: running = false → 일시정지, true → 재개
-            if (!game.running) {
-                // 일시정지 화면 표시
-                document.getElementById('popupBackground').style.display = 'flex';
-                document.getElementById('popupBackground').innerHTML = `
-            <div class="clear-popup micro-5-regular">
-                <h1 class="popup-title">PAUSE</h1>
-                <div class="clear-btns">
-                    <button id="resumeBtn">RESUME</button>
+        // 일시정지 팝업 표시
+        function showPausePopup() {
+            const popup = document.getElementById('popupBackground');
+            popup.innerHTML = `
+                <div class="clear-popup micro-5-regular">
+                    <h1 class="popup-title">PAUSE</h1>
+                    <div class="clear-btns">
+                        <button id="resumeBtn">RESUME</button>
+                        <button id="restartBtn2">RESTART</button>
+                    </div>
                 </div>
-            </div>
-        `;
-                document.getElementById('resumeBtn').addEventListener('click', () => {
-                    document.getElementById('popupBackground').style.display = 'none';
-                    game.running = true;
-                });
-            }
+            `;
+            popup.style.display = 'flex';
+
+            document.getElementById('resumeBtn').addEventListener('click', () => {
+                popup.style.display = 'none';
+                game.running = true;
+            });
+
+            document.getElementById('restartBtn2').addEventListener('click', () => {
+                restartGame();
+            });
+        }
+
+        // 이벤트 리스너
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            game.running = false;
+            showPausePopup();
         });
 
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            restartGame();
+        });
 
-        function restartGame() {
-            stageCleared = false; 
-            game = {
-                yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
-                grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
-                platforms: [
-                    { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
-                    { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
-                    { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
-                    { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
-                    { x: 624, y: 500, width: 92, height: 50, image: 'ground3' },
-                    { x: 798, y: 500, width: 92, height: 50, image: 'ground3' },
-                    { x: 973, y: 500, width: 92, height: 50, image: 'ground3' },
-                    { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
-                ],
-                obstacles: [
-                    { x: 400, y: 620, width: 50, height: 50 }, // 예시 장애물
-                    { x: 700, y: 580, width: 50, height: 50 }
-                ],
-                keys: [
-                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' },
-                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'light' },
-                ],
-                box: { x: 950, y: 185, opened: false, image: 'box_close' },
-                yarn: { x: 0, y: 0, visible: false },
-                keyInput: {},
-                lives: 3,
-                gravity: 0.6,
-                jumpPower: -13,
-                moveSpeed: 6,
-                gameStartTime: Date.now(),
-                keysCollected: 0,
-                yellowCatFinished: false,
-                grayCatFinished: false,
-                running: true
-            };
-            updateHearts();
-        }
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            window.location.href = "stage4.html";
+        });
 
         // 게임 루프
         function gameLoop() {
@@ -650,7 +572,32 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // 게임 시작
+        function renderHearts() {
+            const heartContainer = document.getElementById("heartContainer");
+            heartContainer.innerHTML = ""; // 기존 하트 초기화
+
+            for (let i = 0; i < 3; i++) {
+                const img = document.createElement("img");
+                img.src = i < game.lives ? images.heart_full.src : images.heart_empty.src;
+                heartContainer.appendChild(img);
+            }
+        }
+
+        function gameOver() {
+            game.running = false;
+            const popup = document.getElementById('popupBackground');
+            popup.innerHTML = `
+        <div class="clear-popup micro-5-regular">
+            <h1 class="popup-title" style="color:red;">GAME OVER</h1>
+            <div class="clear-btns">
+                <button id="restartBtn3">RESTART</button>
+            </div>
+        </div>
+    `;
+            popup.style.display = 'flex';
+            document.getElementById('restartBtn3').addEventListener('click', restartGame);
+        }
+
         gameLoop();
     </script>
 </body>
