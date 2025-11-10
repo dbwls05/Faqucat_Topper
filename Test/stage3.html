@@ -327,6 +327,8 @@
                 ],
                 box: { x: 950, y: 185, opened: false },
                 yarn: { x: 0, y: 0, visible: false },
+                yellowTouchedYarn: false, 
+                grayTouchedYarn: false,  
                 keyInput: {},
                 lives: 3,
                 gravity: 0.6,
@@ -408,7 +410,7 @@
 
         // 충돌 감지
         function checkCollisions() {
-            if (game.stageCleared) return;
+           if (game.stageCleared) return;
             // 열쇠 수집
             game.keys.forEach(key => {
                 if (!key.collected) {
@@ -433,8 +435,14 @@
 
             // 털뭉치 획득
             if (game.yarn.visible) {
-                if (checkOverlap(game.yellowCat, game.yarn, 40, 40) ||
-                    checkOverlap(game.grayCat, game.yarn, 40, 40)) {
+                if (checkOverlap(game.yellowCat, game.yarn, 40, 40)) {
+                    game.yellowTouchedYarn = true;
+                }
+                if (checkOverlap(game.grayCat, game.yarn, 40, 40)) {
+                    game.grayTouchedYarn = true;
+                }
+
+                if (game.yellowTouchedYarn && game.grayTouchedYarn) {
                     game.yarn.visible = false;
                     stageClear();
                     return;
