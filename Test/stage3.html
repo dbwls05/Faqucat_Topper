@@ -1,3 +1,5 @@
+<!--스테이지 3-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -114,6 +116,15 @@
             margin-left: auto;
             cursor: pointer;
             z-index: 3;
+        }
+
+        /* ===== GIF 고양이 스타일 ===== */
+        .cat-gif {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            z-index: 101;
+            pointer-events: none;
         }
 
         /* ===== 광고 영역 ===== */
@@ -239,6 +250,11 @@
                     <img src="../img/구름.png" class="main-cloud" alt="">
                     <img src="../img/지형1.png" class="main-ground" alt="">
                 </div>
+
+                <!-- GIF 고양이들 -->
+                <img id="yellowCatGif" class="cat-gif" src="../img/치즈냥.gif" alt="Yellow Cat">
+                <img id="grayCatGif" class="cat-gif" src="../img/회색냥.gif" alt="Gray Cat">
+
                 <canvas id="gameCanvas" width="1200" height="750"
                     style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100;">
                 </canvas>
@@ -249,8 +265,8 @@
                     <h1 class="popup-title">GAME CLEAR</h1>
                     <div class="clear-items">
                         <div class="item"><img src="../img/털뭉치_빨강.png" alt="Item 1"></div>
-                        <div class="item empty"></div>
-                        <div class="item empty"></div>
+                        <div class="item"><img src="../img/털뭉치_노랑.png" alt="Item 2"></div>
+                        <div class="item"><img src="../img/털뭉치_파랑.png" alt="Item 3"></div>
                     </div>
                     <div class="clear-btns">
                         <button id="restartBtn">RESTART</button>
@@ -271,10 +287,12 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
+        // GIF 이미지 요소 가져오기
+        const yellowCatGif = document.getElementById('yellowCatGif');
+        const grayCatGif = document.getElementById('grayCatGif');
+
         // 이미지 로드
         const images = {
-            yellowCat: new Image(),
-            grayCat: new Image(),
             key: new Image(),
             box_open: new Image(),
             box_close: new Image(),
@@ -289,8 +307,6 @@
             heart_empty: new Image()
         };
 
-        images.yellowCat.src = '../img/치즈냥.gif';
-        images.grayCat.src = '../img/회색냥.gif';
         images.key.src = '../img/열쇠.gif';
         images.box_open.src = '../img/보물상자_open.png';
         images.box_close.src = '../img/보물상자_close.png';
@@ -304,11 +320,27 @@
         images.heart_full.src = "../img/채워진하트.png";
         images.heart_empty.src = "../img/빈하트.png";
 
+        // 고양이 애니메이션 이미지
+        const catImages = {
+            yellow: {
+                idleLeft: '../img/치즈냥_정지_왼쪽.png',
+                idleRight: '../img/치즈냥_정지_오른쪽.png',
+                moveLeft: '../img/치즈냥_걷기_왼쪽.gif',
+                moveRight: '../img/치즈냥_걷기_오른쪽.gif'
+            },
+            gray: {
+                idleLeft: '../img/회색냥_정지_왼쪽.png',
+                idleRight: '../img/회색냥_정지_오른쪽.png',
+                moveLeft: '../img/회색냥_걷기_왼쪽.gif',
+                moveRight: '../img/회색냥_걷기_오른쪽.gif'
+            }
+        };
+
         // 게임 상태 초기화 함수
         function createInitialGameState() {
             return {
-                yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
-                grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false },
+                yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
+                grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
                 platforms: [
                     { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
                     { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
@@ -362,8 +394,18 @@
         // 고양이 업데이트
         function updateCat(cat, jumpKey, leftKey, rightKey) {
             cat.vx = 0;
-            if (game.keyInput[leftKey]) cat.vx = -game.moveSpeed;
-            if (game.keyInput[rightKey]) cat.vx = game.moveSpeed;
+            cat.isMoving = false;
+            
+            if (game.keyInput[leftKey]) {
+                cat.vx = -game.moveSpeed;
+                cat.direction = 'left';
+                cat.isMoving = true;
+            }
+            if (game.keyInput[rightKey]) {
+                cat.vx = game.moveSpeed;
+                cat.direction = 'right';
+                cat.isMoving = true;
+            }
 
             if (game.keyInput[jumpKey] && cat.onGround) {
                 cat.vy = game.jumpPower;
@@ -397,6 +439,39 @@
                 cat.y = groundY - cat.height;
                 cat.vy = 0;
                 cat.onGround = true;
+            }
+        }
+
+        function updateCatGifPositions() {
+            yellowCatGif.style.left = (game.yellowCat.x) + 'px';
+            yellowCatGif.style.top = (game.yellowCat.y) + 'px';
+            
+            grayCatGif.style.left = (game.grayCat.x) + 'px';
+            grayCatGif.style.top = (game.grayCat.y) + 'px';
+            
+            updateCatImage(game.yellowCat, yellowCatGif, 'yellow');
+            updateCatImage(game.grayCat, grayCatGif, 'gray');
+        }
+        
+        function updateCatImage(cat, gifElement, catType) {
+            let newSrc = '';
+            
+            if (cat.isMoving) {
+                if (cat.direction === 'left') {
+                    newSrc = catImages[catType].moveLeft;
+                } else {
+                    newSrc = catImages[catType].moveRight;
+                }
+            } else {
+                if (cat.direction === 'left') {
+                    newSrc = catImages[catType].idleLeft;
+                } else {
+                    newSrc = catImages[catType].idleRight;
+                }
+            }
+            
+            if (gifElement.src !== newSrc && newSrc !== '') {
+                gifElement.src = newSrc;
             }
         }
 
@@ -457,11 +532,9 @@
                     game.lives--;
 
                     if (game.lives > 0) {
-                        // 남은 목숨이 있으면 캐릭터만 초기 위치로 복귀
                         game.yellowCat.x = 50; game.yellowCat.y = 670; game.yellowCat.vy = 0;
                         game.grayCat.x = 1100; game.grayCat.y = 670; game.grayCat.vy = 0;
                     } else {
-                        // 목숨이 모두 소진되면 게임 오버
                         gameOver();
                     }
                 }
@@ -475,6 +548,7 @@
 
             updateCat(game.yellowCat, 'w', 'a', 'd');
             updateCat(game.grayCat, 'ArrowUp', 'ArrowLeft', 'ArrowRight');
+            updateCatGifPositions();
             checkCollisions();
         }
 
@@ -494,11 +568,7 @@
                 }
             });
 
-            // 이미지 로드
-            game.obstacles.forEach(obstacle => {
-                ctx.drawImage(images[obstacle.image], obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-            });
-
+            // 장애물
             game.obstacles.forEach(obstacle => {
                 ctx.drawImage(images[obstacle.image], obstacle.x, obstacle.y, obstacle.width, obstacle.height);
             });
@@ -515,10 +585,6 @@
             }
 
             renderHearts();
-
-            // 고양이
-            ctx.drawImage(images.yellowCat, game.yellowCat.x, game.yellowCat.y, game.yellowCat.width, game.yellowCat.height);
-            ctx.drawImage(images.grayCat, game.grayCat.x, game.grayCat.y, game.grayCat.width, game.grayCat.height);
         }
 
         // 스테이지 클리어
@@ -555,6 +621,20 @@
             });
 
             document.getElementById('restartBtn2').addEventListener('click', () => {
+                popup.innerHTML = `
+                    <div class="clear-popup micro-5-regular">
+                        <h1 class="popup-title">GAME CLEAR</h1>
+                        <div class="clear-items">
+                            <div class="item"><img src="../img/털뭉치_빨강.png" alt="Item 1"></div>
+                            <div class="item"><img src="../img/털뭉치_노랑.png" alt="Item 2"></div>
+                            <div class="item"><img src="../img/털뭉치_파랑.png" alt="Item 3"></div>
+                        </div>
+                        <div class="clear-btns">
+                            <button id="restartBtn">RESTART</button>
+                            <button id="nextBtn">NEXT</button>
+                        </div>
+                    </div>
+                `;
                 restartGame();
             });
         }
@@ -582,7 +662,7 @@
 
         function renderHearts() {
             const heartContainer = document.getElementById("heartContainer");
-            heartContainer.innerHTML = ""; // 기존 하트 초기화
+            heartContainer.innerHTML = "";
 
             for (let i = 0; i < 3; i++) {
                 const img = document.createElement("img");
