@@ -323,8 +323,8 @@
                 </div>
 
                 <!-- GIF 고양이들 -->
-                <img id="yellowCatGif" class="cat-gif" src="../img/치즈냥.gif" alt="Yellow Cat">
-                <img id="grayCatGif" class="cat-gif" src="../img/회색냥.gif" alt="Gray Cat">
+                <img id="yellowCatGif" class="cat-gif" src="../img/치즈냥_걷기_오른쪽.gif" alt="Yellow Cat">
+                <img id="grayCatGif" class="cat-gif" src="../img/회색냥_걷기_왼쪽.gif" alt="Gray Cat">
 
                 <canvas id="gameCanvas" width="1200" height="750"
                     style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100; pointer-events: none;">
@@ -335,6 +335,8 @@
                         <h1 class="popup-title">GAME CLEAR</h1>
                         <div class="clear-items">
                             <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
+                            <div class="item empty"></div>
+                            <div class="item empty"></div>
                         </div>
                         <div class="clear-btns">
                             <button id="restartBtn">RESTART</button>
@@ -371,7 +373,11 @@
             water1: new Image(),
             water2: new Image(),
             heart_full: new Image(),
-            heart_empty: new Image()
+            heart_empty: new Image(),
+            stone1: new Image(),
+            stone2: new Image(),
+            stone3: new Image(),
+            stone_small: new Image()
         };
 
         images.key.src = '../img/열쇠.gif';
@@ -386,6 +392,10 @@
         images.water2.src = '../img/물2.png';
         images.heart_full.src = "../img/채워진하트.png";
         images.heart_empty.src = "../img/빈하트.png";
+        images.stone1.src = "../img/돌막대1.png";
+        images.stone2.src = "../img/돌막대2.png";
+        images.stone3.src = "../img/돌막대3.png";
+        images.stone_small.src = "../img/장애물_돌.png";
 
         const catImages = {
             yellow: {
@@ -407,16 +417,20 @@
                 yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
                 grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
                 platforms: [
-                    { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
-                    { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
-                    { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
-                    { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
-                    { x: 624, y: 500, width: 72, height: 50, image: 'ground3' },
-                    { x: 973, y: 500, width: 72, height: 50, image: 'ground3' },
-                    { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
+                    { x: 560, y: 321, width: 92, height: 50, image: 'ground3' },
+                    { x: 416, y: 232, width: 92, height: 50, image: 'ground3' },
+                    { x: 703, y: 232, width: 92, height: 50, image: 'ground3' },
+                    { x: 472, y: 422, width: 270, height: 95, image: 'ground2' },
+                    { x: 258, y: 535, width: 30, height: 128, image: 'stone3' },
+                    { x: 402, y: 497, width: 30, height: 128, image: 'stone3' },
+                    { x: 402, y: 547, width: 30, height: 128, image: 'stone3' },
+                    { x: 843, y: 547, width: 30, height: 128, image: 'stone3' },
+                    { x: 741, y: 501, width: 30, height: 128, image: 'stone3' },
+                    { x: 741, y: 552, width: 30, height: 128, image: 'stone3' }
                 ],
                 obstacles: [
-                    { x: 200, y: 621, width: 800, height: 120, image: 'water2' }
+                    { x: 200, y: 621, width: 800, height: 120, image: 'water2' },
+                    { x: 583, y: 302, width: 47, height: 25, image: 'stone_small' }
                 ],
                 keys: [
                     { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' }
@@ -647,6 +661,8 @@
                     <h1 class="popup-title">GAME CLEAR</h1>
                     <div class="clear-items">
                         <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
+                        <div class="item empty"></div>
+                        <div class="item empty"></div>
                     </div>
                     <div class="clear-btns">
                         <button id="restartBtn">RESTART</button>
@@ -689,6 +705,8 @@
                         <h1 class="popup-title">GAME CLEAR</h1>
                         <div class="clear-items">
                             <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
+                            <div class="item empty"></div>
+                            <div class="item empty"></div>
                         </div>
                         <div class="clear-btns">
                             <button id="restartBtn">RESTART</button>
