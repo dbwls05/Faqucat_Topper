@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facucat - Stage 3</title>
+    <title>Facucat</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
 
@@ -34,13 +34,13 @@
         }
 
         .gif {
-            width: 200px;
-            height: 400px;
+            width: 300px;
+            height: 500px;
             padding: 30px;
         }
 
         .ad {
-            height: 200px;
+            height: 300px;
         }
 
         /* ===== 게임 배경 영역 유지 ===== */
@@ -313,7 +313,7 @@
                     <div class="main-heart">
                         <div class="main-heart" id="heartContainer"></div>
                     </div>
-                    <h1 class="micro-5-regular">Stage</h1>
+                    <h1 class="micro-5-regular">Stage 3</h1>
                     <img src="../img/Stop.png" class="stop" alt="Stop" id="stopBtn">
                 </div>
                 <img src="../img/하늘.png" class="main-img" alt="">
@@ -336,7 +336,7 @@
                         <div class="clear-items">
                             <div class="item"><img src="../img/털뭉치_빨강.png" alt="Item 1"></div>
                             <div class="item"><img src="../img/털뭉치_노랑.png" alt="Item 2"></div>
-                            <div class="item"><img src="../img/털뭉치_파랑.png" alt="Item 3"></div>
+                            <div class="item"><img src="../img/털뭉치_연두.png" alt="Item 3"></div>
                         </div>
                         <div class="clear-btns">
                             <button id="restartBtn">RESTART</button>
@@ -383,7 +383,7 @@
         images.ground2.src = '../img/땅_middle.png';
         images.ground3.src = '../img/땅_short.png';
         images.ground4.src = '../img/땅.png';
-        images.yarn.src = '../img/털뭉치_노랑.png';
+        images.yarn.src = '../img/털뭉치_연두.png';
         images.water1.src = '../img/물.png';
         images.water2.src = '../img/물2.png';
         images.heart_full.src = "../img/채워진하트.png";
@@ -409,22 +409,20 @@
                 yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
                 grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
                 platforms: [
-                    { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
-                    { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
-                    { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
-                    { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
-                    { x: 624, y: 500, width: 72, height: 50, image: 'ground3' },
-                    { x: 973, y: 500, width: 72, height: 50, image: 'ground3' },
-                    { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
+                    { x: 140, y: 190, width: 532, height: 105, image: 'ground1' },
+                    { x: 200, y: 495, width: 92, height: 50, image: 'ground3' },
+                    { x: 650, y: 365, width: 92, height: 50, image: 'ground3' },
+                    { x: 600, y: 230, width: 92, height: 50, image: 'ground3' },
+                    { x: 750, y: 515, width: 270, height: 95, image: 'ground2' }
                 ],
                 obstacles: [
-                    { x: 200, y: 640, width: 292, height: 73, image: 'water2' },
-                    { x: 700, y: 640, width: 292, height: 73, image: 'water2' }
+                    { x: 200, y: 635, width: 292, height: 73, image: 'water2' },
+                    { x: 500, y: 635, width: 292, height: 73, image: 'water2' }
                 ],
                 keys: [
-                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' }
+                    { x: 493, y: 180, collected: false, color: 'glay', image: 'key' }
                 ],
-                box: { x: 950, y: 185, opened: false },
+                box: { x: 207, y: 460, opened: false },
                 yarn: { x: 0, y: 0, visible: false },
                 yellowTouchedYarn: false, 
                 grayTouchedYarn: false,  
@@ -651,7 +649,7 @@
                     <div class="clear-items">
                         <div class="item"><img src="../img/털뭉치_빨강.png" alt="Item 1"></div>
                         <div class="item"><img src="../img/털뭉치_노랑.png" alt="Item 2"></div>
-                        <div class="item"><img src="../img/털뭉치_파랑.png" alt="Item 3"></div>
+                        <div class="item"><img src="../img/털뭉치_연두.png" alt="Item 3"></div>
                     </div>
                     <div class="clear-btns">
                         <button id="restartBtn">RESTART</button>
@@ -695,7 +693,7 @@
                         <div class="clear-items">
                             <div class="item"><img src="../img/털뭉치_빨강.png" alt="Item 1"></div>
                             <div class="item"><img src="../img/털뭉치_노랑.png" alt="Item 2"></div>
-                            <div class="item"><img src="../img/털뭉치_파랑.png" alt="Item 3"></div>
+                            <div class="item"><img src="../img/털뭉치_연두.png" alt="Item 3"></div>
                         </div>
                         <div class="clear-btns">
                             <button id="restartBtn">RESTART</button>

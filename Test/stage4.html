@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facucat</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+
+        /* ===== 폰트 ===== */
+        .micro-5-regular {
+            font-family: "Micro 5", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        /* ===== 공통 구조 ===== */
+        .container {
+            display: block;
+            margin: 50px;
+        }
+
+        .top-row,
+        .bottom-row {
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .gif {
+            width: 300px;
+            height: 500px;
+            padding: 30px;
+        }
+
+        .ad {
+            height: 300px;
+        }
+
+        /* ===== 게임 배경 영역 유지 ===== */
+        .main-back {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            width: 100%;
+            max-width: var(--main-max-width);
+        }
+
+        .main-img {
+            width: 1200px;
+            height: 750px;
+            position: relative;
+        }
+
+        .main-obj {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1200px;
+            height: 750px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 0;
+        }
+
+        .main-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 1200px;
+        }
+
+        /* ===== 게임 상단 UI ===== */
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: clamp(20px, 3vw, 40px);
+            z-index: 1;
+            box-sizing: border-box;
+        }
+
+        .main-heart {
+            display: flex;
+            gap: clamp(5px, 1vw, 10px);
+            z-index: 2;
+        }
+
+        .main-heart img {
+            width: clamp(30px, 4vw, 50px);
+            height: auto;
+            z-index: 2;
+        }
+
+        .main h1 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            color: white;
+            font-size: clamp(24px, 4vw, 48px);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .stop {
+            width: clamp(30px, 4vw, 50px);
+            height: auto;
+            margin-left: auto;
+            cursor: pointer;
+            z-index: 150;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .stop:hover {
+            transform: scale(1.1);
+        }
+
+        /* ===== GIF 고양이 스타일 ===== */
+        .cat-gif {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            z-index: 101;
+            pointer-events: none;
+        }
+
+        /* ===== 팝업 ===== */
+        .popup-background {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .clear-popup {
+            width: 500px;
+            height: 300px;
+            padding: 51px 50px 52px 50px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 6px solid white;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .popup {
+            display: flex;
+            width: 500px;
+            height: 300px;
+            padding: 51px 50px 52px 50px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 37px;
+            flex-shrink: 0;
+            border: 10px solid #FFF;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+        }
+
+        .popup-title {
+            font-size: 96px;
+            color: #0066ff;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+            margin: 0;
+        }
+
+        .clear-items {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .clear-items .item {
+            width: 70px;
+            height: 70px;
+            border: 3px solid white;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .clear-items .item img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .clear-items .empty {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .clear-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        .clear-btns button {
+            font-size: 56px;
+            font-family: "Micro 5", sans-serif;
+            color: white;
+            background: rgba(0, 0, 0, 0);
+            border: none;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+            padding: 10px 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .clear-btns button:hover {
+            transform: scale(1.01);
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
+            border: solid white 5px;
+        }
+
+        .clear-btns button:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .popup button {
+            align-items: center;
+            font-size: 48px;
+            margin: 10px;
+            padding: 20px 180px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            background-color: rgba(0, 0, 0, 0);
+            color: white;
+            text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.493);
+        }
+
+        .popup button:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+        }
+
+        .retry {
+            color: white;
+            text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.493);
+        }
+
+        .retry:hover {
+            transform: scale(1.05);
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+        }
+        
+        .pause {
+            width: clamp(30px, 4vw, 50px);
+            height: auto;
+            margin-left: auto;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .pause:hover {
+            transform: scale(1.1);
+        }
+
+        .exit {
+            color: white;
+            text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.493);
+        }
+
+        .exit:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="top-row">
+            <img src="../img/(광고)물불게임.gif" class="gif" alt="">
+
+            <div class="main-back">
+                <div class="main">
+                    <div class="main-heart">
+                        <div class="main-heart" id="heartContainer"></div>
+                    </div>
+                    <h1 class="micro-5-regular">Stage 4</h1>
+                    <img src="../img/Stop.png" class="stop" alt="Stop" id="stopBtn">
+                </div>
+                <img src="../img/하늘.png" class="main-img" alt="">
+                <div class="main-obj">
+                    <img src="../img/구름.png" class="main-cloud" alt="">
+                    <img src="../img/지형1.png" class="main-ground" alt="">
+                </div>
+
+                <!-- GIF 고양이들 -->
+                <img id="yellowCatGif" class="cat-gif" src="../img/치즈냥.gif" alt="Yellow Cat">
+                <img id="grayCatGif" class="cat-gif" src="../img/회색냥.gif" alt="Gray Cat">
+
+                <canvas id="gameCanvas" width="1200" height="750"
+                    style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100; pointer-events: none;">
+                </canvas>
+
+                <div class="popup-background" id="popupBackground">
+                    <div class="clear-popup micro-5-regular">
+                        <h1 class="popup-title">GAME CLEAR</h1>
+                        <div class="clear-items">
+                            <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
+                        </div>
+                        <div class="clear-btns">
+                            <button id="restartBtn">RESTART</button>
+                            <button id="nextBtn">NEXT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <img src="../img/(광고)라면가게.gif" class="gif">
+        </div>
+        <div class="bottom-row">
+            <img src="../img/내가만든거 아님.png" class="ad" alt="">
+            <img src="../img/역전재판.png" class="ad" alt="">
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const yellowCatGif = document.getElementById('yellowCatGif');
+        const grayCatGif = document.getElementById('grayCatGif');
+
+        const images = {
+            key: new Image(),
+            box_open: new Image(),
+            box_close: new Image(),
+            yarn: new Image(),
+            ground1: new Image(),
+            ground2: new Image(),
+            ground3: new Image(),
+            ground4: new Image(),
+            water1: new Image(),
+            water2: new Image(),
+            heart_full: new Image(),
+            heart_empty: new Image()
+        };
+
+        images.key.src = '../img/열쇠.gif';
+        images.box_open.src = '../img/보물상자_open.png';
+        images.box_close.src = '../img/보물상자_close.png';
+        images.ground1.src = '../img/땅_long.png';
+        images.ground2.src = '../img/땅_middle.png';
+        images.ground3.src = '../img/땅_short.png';
+        images.ground4.src = '../img/땅.png';
+        images.yarn.src = '../img/털뭉치_청록.png';
+        images.water1.src = '../img/물.png';
+        images.water2.src = '../img/물2.png';
+        images.heart_full.src = "../img/채워진하트.png";
+        images.heart_empty.src = "../img/빈하트.png";
+
+        const catImages = {
+            yellow: {
+                idleLeft: '../img/치즈냥_정지_왼쪽.png',
+                idleRight: '../img/치즈냥_정지_오른쪽.png',
+                moveLeft: '../img/치즈냥_걷기_왼쪽.gif',
+                moveRight: '../img/치즈냥_걷기_오른쪽.gif'
+            },
+            gray: {
+                idleLeft: '../img/회색냥_정지_왼쪽.png',
+                idleRight: '../img/회색냥_정지_오른쪽.png',
+                moveLeft: '../img/회색냥_걷기_왼쪽.gif',
+                moveRight: '../img/회색냥_걷기_오른쪽.gif'
+            }
+        };
+
+        function createInitialGameState() {
+            return {
+                yellowCat: { x: 50, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
+                grayCat: { x: 1100, y: 670, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
+                platforms: [
+                    { x: 209, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
+                    { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
+                    { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
+                    { x: 624, y: 500, width: 72, height: 50, image: 'ground3' },
+                    { x: 973, y: 500, width: 72, height: 50, image: 'ground3' },
+                    { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
+                ],
+                obstacles: [
+                    { x: 200, y: 621, width: 800, height: 120, image: 'water2' }
+                ],
+                keys: [
+                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' }
+                ],
+                box: { x: 950, y: 185, opened: false },
+                yarn: { x: 0, y: 0, visible: false },
+                yellowTouchedYarn: false, 
+                grayTouchedYarn: false,  
+                keyInput: {},
+                lives: 3,
+                gravity: 0.6,
+                jumpPower: -13,
+                moveSpeed: 6,
+                keysCollected: 0,
+                running: true,
+                stageCleared: false
+            };
+        }
+
+        let game = createInitialGameState();
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            game.keyInput[key] = true;
+            if (e.key.startsWith('Arrow')) {
+                game.keyInput[e.key] = true;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            game.keyInput[key] = false;
+            if (e.key.startsWith('Arrow')) {
+                game.keyInput[e.key] = false;
+            }
+        });
+
+        function updateCat(cat, jumpKey, leftKey, rightKey) {
+            cat.vx = 0;
+            cat.isMoving = false;
+            
+            if (game.keyInput[leftKey]) {
+                cat.vx = -game.moveSpeed;
+                cat.direction = 'left';
+                cat.isMoving = true;
+            }
+            if (game.keyInput[rightKey]) {
+                cat.vx = game.moveSpeed;
+                cat.direction = 'right';
+                cat.isMoving = true;
+            }
+
+            if (game.keyInput[jumpKey] && cat.onGround) {
+                cat.vy = game.jumpPower;
+                cat.onGround = false;
+            }
+
+            cat.vy += game.gravity;
+            cat.x += cat.vx;
+            cat.y += cat.vy;
+
+            if (cat.x < 0) cat.x = 0;
+            if (cat.x + cat.width > canvas.width) cat.x = canvas.width - cat.width;
+
+            cat.onGround = false;
+            const platformOffset = 15;
+
+            game.platforms.forEach(platform => {
+                if (cat.vy >= 0 &&
+                    cat.x + cat.width > platform.x &&
+                    cat.x < platform.x + platform.width &&
+                    cat.y + cat.height >= platform.y + platformOffset &&
+                    cat.y + cat.height <= platform.y + platformOffset + 20) {
+                    cat.y = platform.y + platformOffset - cat.height;
+                    cat.vy = 0;
+                    cat.onGround = true;
+                }
+            });
+
+            const groundY = 660;
+            if (cat.y + cat.height >= groundY) {
+                cat.y = groundY - cat.height;
+                cat.vy = 0;
+                cat.onGround = true;
+            }
+        }
+
+        function updateCatGifPositions() {
+            yellowCatGif.style.left = (game.yellowCat.x) + 'px';
+            yellowCatGif.style.top = (game.yellowCat.y) + 'px';
+            
+            grayCatGif.style.left = (game.grayCat.x) + 'px';
+            grayCatGif.style.top = (game.grayCat.y) + 'px';
+            
+            updateCatImage(game.yellowCat, yellowCatGif, 'yellow');
+            updateCatImage(game.grayCat, grayCatGif, 'gray');
+        }
+        
+        function updateCatImage(cat, gifElement, catType) {
+            let newSrc = '';
+            
+            if (cat.isMoving) {
+                if (cat.direction === 'left') {
+                    newSrc = catImages[catType].moveLeft;
+                } else {
+                    newSrc = catImages[catType].moveRight;
+                }
+            } else {
+                if (cat.direction === 'left') {
+                    newSrc = catImages[catType].idleLeft;
+                } else {
+                    newSrc = catImages[catType].idleRight;
+                }
+            }
+            
+            if (gifElement.src !== newSrc && newSrc !== '') {
+                gifElement.src = newSrc;
+            }
+        }
+
+        function checkOverlap(cat, obj, width, height) {
+            return cat.x < obj.x + width &&
+                cat.x + cat.width > obj.x &&
+                cat.y < obj.y + height &&
+                cat.y + cat.height > obj.y;
+        }
+
+        function checkCollisions() {
+            if (game.stageCleared) return;
+
+            game.keys.forEach(key => {
+                if (!key.collected) {
+                    const collector = key.color === 'yellow' ? game.yellowCat : game.grayCat;
+                    if (checkOverlap(collector, key, 30, 30)) {
+                        key.collected = true;
+                        game.keysCollected++;
+                    }
+                }
+            });
+
+            if (!game.box.opened && game.keysCollected >= 1) {
+                if (checkOverlap(game.yellowCat, game.box, 74, 46) ||
+                    checkOverlap(game.grayCat, game.box, 74, 46)) {
+                    game.box.opened = true;
+                    game.yarn.visible = true;
+                    game.yarn.x = game.box.x + 10;
+                    game.yarn.y = game.box.y - 150;
+                }
+            }
+
+            if (game.yarn.visible) {
+                if (checkOverlap(game.yellowCat, game.yarn, 40, 40)) {
+                    game.yellowTouchedYarn = true;
+                }
+                if (checkOverlap(game.grayCat, game.yarn, 40, 40)) {
+                    game.grayTouchedYarn = true;
+                }
+
+                if (game.yellowTouchedYarn && game.grayTouchedYarn) {
+                    game.yarn.visible = false;
+                    stageClear();
+                    return;
+                }
+            }
+
+            game.obstacles.forEach(obstacle => {
+                if (checkOverlap(game.yellowCat, obstacle, obstacle.width, obstacle.height) ||
+                    checkOverlap(game.grayCat, obstacle, obstacle.width, obstacle.height)) {
+
+                    game.lives--;
+
+                    if (game.lives > 0) {
+                        game.yellowCat.x = 50; game.yellowCat.y = 670; game.yellowCat.vy = 0;
+                        game.grayCat.x = 1100; game.grayCat.y = 670; game.grayCat.vy = 0;
+                    } else {
+                        gameOver();
+                    }
+                }
+            });
+        }
+
+        function update() {
+            if (!game.running) return;
+
+            updateCat(game.yellowCat, 'w', 'a', 'd');
+            updateCat(game.grayCat, 'ArrowUp', 'ArrowLeft', 'ArrowRight');
+            updateCatGifPositions();
+            checkCollisions();
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            game.platforms.forEach(platform => {
+                ctx.drawImage(images[platform.image], platform.x, platform.y, platform.width, platform.height);
+            });
+
+            game.keys.forEach(key => {
+                if (!key.collected) {
+                    ctx.drawImage(images.key, key.x, key.y, 26, 40);
+                }
+            });
+
+            game.obstacles.forEach(obstacle => {
+                ctx.drawImage(images[obstacle.image], obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+
+            const boxImg = game.box.opened ? images.box_open : images.box_close;
+            const boxY = game.box.opened ? game.box.y - 30 : game.box.y;
+            const boxHeight = game.box.opened ? 74 : 46;
+            ctx.drawImage(boxImg, game.box.x, boxY, 74, boxHeight);
+
+            if (game.yarn.visible) {
+                ctx.drawImage(images.yarn, game.yarn.x, game.yarn.y, 50, 50);
+            }
+
+            renderHearts();
+        }
+
+        function stageClear() {
+            if (game.stageCleared) return;
+            game.stageCleared = true;
+            game.running = false;
+            
+            const popup = document.getElementById('popupBackground');
+            popup.innerHTML = `
+                <div class="clear-popup micro-5-regular">
+                    <h1 class="popup-title">GAME CLEAR</h1>
+                    <div class="clear-items">
+                        <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
+                    </div>
+                    <div class="clear-btns">
+                        <button id="restartBtn">RESTART</button>
+                        <button id="nextBtn">NEXT</button>
+                    </div>
+                </div>
+            `;
+            popup.style.display = 'flex';
+            
+            document.getElementById('restartBtn').addEventListener('click', () => {
+                restartGame();
+            });
+
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                window.location.href = 'stage5.html';
+            });
+        }
+
+        function restartGame() {
+            document.getElementById('popupBackground').style.display = 'none';
+            game = createInitialGameState();
+        }
+
+        function showPausePopup() {
+            game.running = false;
+            const popup = document.getElementById('popupBackground');
+            popup.innerHTML = `
+                <div class="popup micro-5-regular">
+                    <button class="retry micro-5-regular" id="resumeBtn">RESUME</button>
+                    <button class="retry micro-5-regular" id="retryBtn2">RETRY</button>
+                    <button class="exit micro-5-regular" id="exitBtn2">EXIT</button>
+                </div>
+            `;
+            popup.style.display = 'flex';
+
+            document.getElementById('resumeBtn').addEventListener('click', () => {
+                popup.style.display = 'none';
+                popup.innerHTML = `
+                    <div class="clear-popup micro-5-regular">
+                        <h1 class="popup-title">GAME CLEAR</h1>
+                        <div class="clear-items">
+                            <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
+                        </div>
+                        <div class="clear-btns">
+                            <button id="restartBtn">RESTART</button>
+                            <button id="nextBtn">NEXT</button>
+                        </div>
+                    </div>
+                `;
+                game.running = true;
+            });
+
+            document.getElementById('retryBtn2').addEventListener('click', () => {
+                location.reload();
+            });
+
+            document.getElementById('exitBtn2').addEventListener('click', () => {
+                location.href = 'index.html';
+            });
+        }
+
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            showPausePopup();
+        });
+
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            restartGame();
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            window.location.href = "stage5.html";
+        });
+
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function renderHearts() {
+            const heartContainer = document.getElementById("heartContainer");
+            heartContainer.innerHTML = "";
+
+            for (let i = 0; i < 3; i++) {
+                const img = document.createElement("img");
+                img.src = i < game.lives ? images.heart_full.src : images.heart_empty.src;
+                heartContainer.appendChild(img);
+            }
+        }
+
+        function gameOver() {
+            game.running = false;
+            const popup = document.getElementById('popupBackground');
+            popup.innerHTML = `
+                <div class="clear-popup micro-5-regular">
+                    <h1 class="popup-title" style="color:red;">GAME OVER</h1>
+                    <div class="clear-btns">
+                        <button id="restartBtn3">RESTART</button>
+                    </div>
+                </div>
+            `;
+            popup.style.display = 'flex';
+            document.getElementById('restartBtn3').addEventListener('click', restartGame);
+        }
+
+        gameLoop();
+    </script>
+</body>
+
+</html>
