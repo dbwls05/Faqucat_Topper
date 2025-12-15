@@ -125,7 +125,13 @@
             height: auto;
             margin-left: auto;
             cursor: pointer;
-            z-index: 3;
+            z-index: 150;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .stop:hover {
+            transform: scale(1.1);
         }
 
         /* ===== GIF 고양이 스타일 ===== */
@@ -160,6 +166,7 @@
             z-index: 200;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(2px);
         }
 
         .clear-popup {
@@ -174,6 +181,21 @@
             align-items: center;
             justify-content: center;
             gap: 25px;
+        }
+
+        .popup {
+            display: flex;
+            width: 500px;
+            height: 300px;
+            padding: 51px 50px 52px 50px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 37px;
+            flex-shrink: 0;
+            border: 10px solid #FFF;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
         }
 
         .popup-title {
@@ -239,6 +261,61 @@
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
         }
+
+        .popup button {
+            align-items: center;
+            font-size: 48px;
+            margin: 10px;
+            padding: 20px 180px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            background-color: rgba(0, 0, 0, 0);
+            color: white;
+            text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.493);
+        }
+
+        .popup button:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+        }
+
+        .retry {
+            color: white;
+            text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.493);
+
+        }
+
+        .retry:hover {
+            transform: scale(1.05);
+            /* background: rgba(255, 255, 255, 0.35); */
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+        }
+        
+        .pause {
+            width: clamp(30px, 4vw, 50px);
+            height: auto;
+            margin-left: auto;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .pause:hover {
+            transform: scale(1.1);
+        }
+
+        .exit {
+            color: white;
+            text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.493);
+
+        }
+
+        .exit:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
+        }
     </style>
 </head>
 
@@ -259,7 +336,7 @@
                     <img src="../img/Stop.png" class="stop" alt="Stop" id="pauseBtn">
                 </div>
                 <img src="../img/하늘.png" class="main-img" alt="">
-                <div class="main-obj">
+                <div class="main-obj">  
                     <img src="../img/구름.png" class="main-cloud" alt="">
                     <img src="../img/지형1.png" class="main-ground" alt="">
                 </div>
@@ -269,7 +346,7 @@
                 <img id="grayCatGif" class="cat-gif" src="../img/회색냥.gif" alt="Gray Cat">
                 
                 <canvas id="gameCanvas" width="1200" height="750"
-                    style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100;">
+                    style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100; pointer-events: none;">
                 </canvas>
 
                 <div class="popup-background" id="popupBackground">
@@ -561,7 +638,31 @@
             if (game.stageCleared) return;
             game.stageCleared = true;
             game.running = false;
-            document.getElementById('popupBackground').style.display = 'flex';
+            
+            const popup = document.getElementById('popupBackground');
+            popup.innerHTML = `
+                <div class="clear-popup micro-5-regular">
+                    <h1 class="popup-title">GAME CLEAR</h1>
+                    <div class="clear-items">
+                        <div class="item"><img src="../img/털뭉치_빨강.png" alt="Item 1"></div>
+                        <div class="item empty"></div>
+                        <div class="item empty"></div>
+                    </div>
+                    <div class="clear-btns">
+                        <button id="restartBtn">RESTART</button>
+                        <button id="nextBtn">NEXT</button>
+                    </div>
+                </div>
+            `;
+            popup.style.display = 'flex';
+            
+            document.getElementById('restartBtn').addEventListener('click', () => {
+                restartGame();
+            });
+
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                window.location.href = 'stage2.html';
+            });
         }
 
         function restartGame() {
@@ -597,24 +698,19 @@
         }
 
         function showPausePopup() {
+            game.running = false;
             const popup = document.getElementById('popupBackground');
             popup.innerHTML = `
-                <div class="clear-popup micro-5-regular">
-                    <h1 class="popup-title">PAUSE</h1>
-                    <div class="clear-btns">
-                        <button id="resumeBtn">RESUME</button>
-                        <button id="restartBtn2">RESTART</button>
-                    </div>
+                <div class="popup micro-5-regular">
+                    <button class="retry micro-5-regular" id="resumeBtn">RESUME</button>
+                    <button class="retry micro-5-regular" id="retryBtn2">RETRY</button>
+                    <button class="exit micro-5-regular" id="exitBtn2">EXIT</button>
                 </div>
             `;
             popup.style.display = 'flex';
 
             document.getElementById('resumeBtn').addEventListener('click', () => {
                 popup.style.display = 'none';
-                game.running = true;
-            });
-
-            document.getElementById('restartBtn2').addEventListener('click', () => {
                 popup.innerHTML = `
                     <div class="clear-popup micro-5-regular">
                         <h1 class="popup-title">GAME CLEAR</h1>
@@ -629,12 +725,19 @@
                         </div>
                     </div>
                 `;
-                restartGame();
+                game.running = true;
+            });
+
+            document.getElementById('retryBtn2').addEventListener('click', () => {
+                location.reload();
+            });
+
+            document.getElementById('exitBtn2').addEventListener('click', () => {
+                location.href = 'index.html';
             });
         }
 
         document.getElementById('pauseBtn').addEventListener('click', () => {
-            game.running = false;
             showPausePopup();
         });
 
