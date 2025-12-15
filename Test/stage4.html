@@ -426,16 +426,20 @@
                     { x: 402, y: 547, width: 30, height: 128, image: 'stone3' },
                     { x: 843, y: 547, width: 30, height: 128, image: 'stone3' },
                     { x: 741, y: 501, width: 30, height: 128, image: 'stone3' },
-                    { x: 741, y: 552, width: 30, height: 128, image: 'stone3' }
+                    { x: 741, y: 552, width: 30, height: 128, image: 'stone3' },
+                    { x: 94, y: 104, width: 270, height: 95, image: 'ground2' },
+                    { x: 890, y: 104, width: 270, height: 95, image: 'ground2' }
                 ],
                 obstacles: [
                     { x: 200, y: 621, width: 800, height: 120, image: 'water2' },
+                    { x: 224, y: 104, width: 97, height: 49, image: 'water1' },
+                    { x: 920, y: 104, width: 97, height: 49, image: 'water1' },
                     { x: 583, y: 302, width: 47, height: 25, image: 'stone_small' }
                 ],
                 keys: [
-                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' }
+                    { x: 1080, y: 70, collected: false, color:'glay', image: 'key' }
                 ],
-                box: { x: 950, y: 185, opened: false },
+                box: { x: 110, y: 75, opened: false },
                 yarn: { x: 0, y: 0, visible: false },
                 yellowTouchedYarn: false, 
                 grayTouchedYarn: false,  
@@ -576,8 +580,8 @@
                     checkOverlap(game.grayCat, game.box, 74, 46)) {
                     game.box.opened = true;
                     game.yarn.visible = true;
-                    game.yarn.x = game.box.x + 10;
-                    game.yarn.y = game.box.y - 150;
+                    game.yarn.x = 580;
+                    game.yarn.y = 120;
                 }
             }
 
