@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facucat 6</title>
+    <title>Facucat</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
 
@@ -337,8 +337,8 @@
                         <h1 class="popup-title">GAME CLEAR</h1>
                         <div class="clear-items">
                             <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
-                            <div class="item empty"></div>
-                            <div class="item empty"></div>
+                            <div class="item"><img src="../img/털뭉치_파랑.png" alt="Item 2"></div>
+                            <div class="item"><img src="../img/털뭉치_보라.png" alt="Item 3"></div>
                         </div>
                         <div class="clear-btns">
                             <button id="restartBtn">RESTART</button>
@@ -386,13 +386,13 @@
 
         images.key_yellow.src = '../img/열쇠.gif';
         images.key_gray.src = '../img/열쇠_회색.png';
-        images.box_open.src = '../img/보물상자_open.png';
-        images.box_close.src = '../img/보물상자_close.png';
+        images.box_open.src = '../img/img_mirror/보물상자_open_거울.png';
+        images.box_close.src = '../img/img_mirror/보물상자_close_거울.png';
         images.ground1.src = '../img/img_mirror/땅_long_거울.png';
         images.ground2.src = '../img/img_mirror/땅_middle_거울.png';
         images.ground3.src = '../img/img_mirror/땅_short_거울.png';
         images.ground4.src = '../img/img_mirror/땅_거울.png';
-        images.yarn.src = '../img/털뭉치_청록.png';
+        images.yarn.src = '../img/털뭉치_보라.png';
         images.water1.src = '../img/img_mirror/물_거울.png';
         images.water2.src = '../img/img_mirror/물2_거울.png';
         images.heart_full.src = "../img/채워진하트.png";
@@ -420,30 +420,37 @@
 
         function createInitialGameState() {
             return {
-                // 고양이 시작 위치를 천장 근처로 변경 (y값 반전)
                 yellowCat: { x: 50, y: 10, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
                 grayCat: { x: 1100, y: 10, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
-                // 플랫폼 위치를 상하 반전 (750 - 원래y - 높이)
                 platforms: [
-                    { x: 258, y: 87, width: 30, height: 128, image: 'stone3' },
-                    { x: 402, y: 75, width: 30, height: 128, image: 'stone3' },
-                    { x: 402, y: 75, width: 30, height: 128, image: 'stone3' },
-                    { x: 843, y: 75, width: 30, height: 128, image: 'stone3' },
-                    { x: 741, y: 121, width: 30, height: 128, image: 'stone3' },
+                    { x: 258, y: 120, width: 30, height: 30, image: 'stone3' },
+                    { x: 402, y: 75, width: 30, height: 30, image: 'stone3' },
+                    { x: 402, y: 400, width: 30, height: 30, image: 'stone3' },
 
+                    { x: 741, y: 121, width: 30, height: 30, image: 'stone3' },
+                    { x: 500, y: 270, width: 30, height: 30, image: 'stone3' },
+                    { x: 300, y: 550, width: 30, height: 30, image: 'stone3' },
+                    { x: 100, y: 300, width: 30, height: 30, image: 'stone3' },
+                    // 오른쪽
+                    { x: 960, y: 121, width: 30, height: 30, image: 'stone3' },
+                    { x: 1100, y: 270, width: 30, height: 30, image: 'stone3' },
+                    { x: 920, y: 420, width: 30, height: 30, image: 'stone3' },                    
                 ],
-                // 장애물 위치도 상하 반전
                 obstacles: [
-                    { x: 583, y: 423, width: 47, height: 25, image: 'stone_small' }
+                    { x: 850, y: 480, width: 47, height: 25, image: 'stone_small' },
+                    { x: 1100, y: 480, width: 47, height: 25, image: 'stone_small' },                 
+                    { x: 400, y: 60, width: 97, height: 49, image: 'water1'},
+                    { x: 700, y: 60, width: 97, height: 49, image: 'water1'},
+                    { x: 300, y: 60, width: 97, height: 49, image: 'water1'},
+                    { x: 980, y: 60, width: 97, height: 49, image: 'water1'}
                 ],
-                // 열쇠와 아이템 위치 상하 반전
                 keys: [
-                    { x: 1080, y: 640, collected: false, color:'yellow', image: 'key_yellow' },
-                    { x: 50, y: 110, collected: false, color:'glay', image: 'key_gray' },
-                    { x: 1080, y: 640, collected: false, color:'yellow', image: 'light' },
-                    { x: 50, y: 110, collected: false, color:'glay', image: 'light' }
+                    { x: 100, y: 460, collected: false, color:'yellow', image: 'key_yellow' },
+                    { x: 730, y: 520, collected: false, color:'glay', image: 'key_gray' },
+                    { x: 100, y: 460, collected: false, color:'yellow', image: 'light' },
+                    { x: 730, y: 520, collected: false, color:'glay', image: 'light' }
                 ],
-                box: { x: 110, y: 629, opened: false },
+                box: { x: 550, y: 80, opened: false },
                 yarn: { x: 0, y: 0, visible: false },
                 yellowTouchedYarn: false, 
                 grayTouchedYarn: false,  
@@ -587,8 +594,8 @@
                     checkOverlap(game.grayCat, game.box, 74, 46)) {
                     game.box.opened = true;
                     game.yarn.visible = true;
-                    game.yarn.x = 580;
-                    game.yarn.y = 580;
+                    game.yarn.x = 825;
+                    game.yarn.y = 350;
                 }
             }
 
@@ -674,8 +681,8 @@
                     <h1 class="popup-title">GAME CLEAR</h1>
                     <div class="clear-items">
                         <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
-                        <div class="item empty"></div>
-                        <div class="item empty"></div>
+                        <div class="item"><img src="../img/털뭉치_파랑.png" alt="Item 2"></div>
+                        <div class="item"><img src="../img/털뭉치_보라.png" alt="Item 3"></div>
                     </div>
                     <div class="clear-btns">
                         <button id="restartBtn">RESTART</button>
@@ -690,7 +697,7 @@
             });
 
             document.getElementById('nextBtn').addEventListener('click', () => {
-                window.location.href = 'stage5.html';
+                window.location.href = 'clearstage.html';
             });
         }
 
@@ -717,9 +724,9 @@
                     <div class="clear-popup micro-5-regular">
                         <h1 class="popup-title">GAME CLEAR</h1>
                         <div class="clear-items">
-                            <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
-                            <div class="item empty"></div>
-                            <div class="item empty"></div>
+                        <div class="item"><img src="../img/털뭉치_청록.png" alt="Item 1"></div>
+                        <div class="item"><img src="../img/털뭉치_파랑.png" alt="Item 2"></div>
+                        <div class="item"><img src="../img/털뭉치_보라.png" alt="Item 3"></div>
                         </div>
                         <div class="clear-btns">
                             <button id="restartBtn">RESTART</button>
@@ -748,7 +755,7 @@
         });
 
         document.getElementById('nextBtn').addEventListener('click', () => {
-            window.location.href = "stage5.html";
+            window.location.href = "clearstage.html";
         });
 
         function gameLoop() {
