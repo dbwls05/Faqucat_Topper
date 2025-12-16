@@ -315,7 +315,7 @@
                     <div class="main-heart">
                         <div class="main-heart" id="heartContainer"></div>
                     </div>
-                    <h1 class="micro-5-regular">Stage 4 - REVERSE GRAVITY</h1>
+                    <h1 class="micro-5-regular">Stage 6</h1>
                     <img src="../img/Stop.png" class="stop" alt="Stop" id="stopBtn">
                 </div>
                 <img src="../img/하늘.png" class="main-img" alt="">
@@ -388,18 +388,18 @@
         images.key_gray.src = '../img/열쇠_회색.png';
         images.box_open.src = '../img/보물상자_open.png';
         images.box_close.src = '../img/보물상자_close.png';
-        images.ground1.src = '../img/땅_long.png';
-        images.ground2.src = '../img/땅_middle.png';
-        images.ground3.src = '../img/땅_short.png';
-        images.ground4.src = '../img/땅.png';
+        images.ground1.src = '../img/img_mirror/땅_long_거울.png';
+        images.ground2.src = '../img/img_mirror/땅_middle_거울.png';
+        images.ground3.src = '../img/img_mirror/땅_short_거울.png';
+        images.ground4.src = '../img/img_mirror/땅_거울.png';
         images.yarn.src = '../img/털뭉치_청록.png';
-        images.water1.src = '../img/물.png';
-        images.water2.src = '../img/물2.png';
+        images.water1.src = '../img/img_mirror/물_거울.png';
+        images.water2.src = '../img/img_mirror/물2_거울.png';
         images.heart_full.src = "../img/채워진하트.png";
         images.heart_empty.src = "../img/빈하트.png";
-        images.stone1.src = "../img/돌막대1.png";
-        images.stone2.src = "../img/돌막대2.png";
-        images.stone3.src = "../img/돌막대3.png";
+        images.stone1.src = "../img/img_mirror/돌막대1_거울.png";
+        images.stone2.src = "../img/img_mirror/돌막대2_거울.png";
+        images.stone3.src = "../img/img_mirror/돌막대3_거울.png";
         images.stone_small.src = "../img/장애물_돌.png";
         images.light.src = "../img/light.png";
 
@@ -425,24 +425,15 @@
                 grayCat: { x: 1100, y: 10, width: 90, height: 90, vx: 0, vy: 0, onGround: false, direction: 'right', isMoving: false },
                 // 플랫폼 위치를 상하 반전 (750 - 원래y - 높이)
                 platforms: [
-                    { x: 560, y: 379, width: 92, height: 50, image: 'ground3' },
-                    { x: 416, y: 468, width: 92, height: 50, image: 'ground3' },
-                    { x: 703, y: 468, width: 92, height: 50, image: 'ground3' },
-                    { x: 472, y: 233, width: 270, height: 95, image: 'ground2' },
                     { x: 258, y: 87, width: 30, height: 128, image: 'stone3' },
                     { x: 402, y: 75, width: 30, height: 128, image: 'stone3' },
                     { x: 402, y: 75, width: 30, height: 128, image: 'stone3' },
                     { x: 843, y: 75, width: 30, height: 128, image: 'stone3' },
                     { x: 741, y: 121, width: 30, height: 128, image: 'stone3' },
-                    { x: 741, y: 70, width: 30, height: 128, image: 'stone3' },
-                    { x: 94, y: 551, width: 270, height: 95, image: 'ground2' },
-                    { x: 890, y: 551, width: 270, height: 95, image: 'ground2' }
+
                 ],
                 // 장애물 위치도 상하 반전
                 obstacles: [
-                    { x: 200, y: 9, width: 800, height: 120, image: 'water2' },
-                    { x: 224, y: 597, width: 97, height: 49, image: 'water1' },
-                    { x: 920, y: 597, width: 97, height: 49, image: 'water1' },
                     { x: 583, y: 423, width: 47, height: 25, image: 'stone_small' }
                 ],
                 // 열쇠와 아이템 위치 상하 반전
