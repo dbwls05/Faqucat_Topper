@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facucat - Congratulations</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+
+        /* ===== 공통 스타일 ===== */
+        .micro-5-regular {
+            font-family: "Micro 5", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            display: block;
+            margin-top: 50px;
+        }
+
+        .top-row,
+        .bottom-row {
+            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        /* ===== 이미지 영역 ===== */
+        .gif {
+            width: 300px;
+            height: 500px;
+            padding: 30px;
+        }
+
+        .ad {
+            height: 300px;
+        }
+
+        /* ===== 메인 구조 ===== */
+        .top-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .main-back {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            width: 100%;
+            max-width: var(--main-max-width);
+        }
+
+        .main-img {
+            width: 1200px;
+            height: 100%;
+            position: relative;
+        }
+
+        .main-obj {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1200px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 1200px;
+        }
+
+        /* ===== 클리어 팝업 ===== */
+        .clear-popup-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+.clear-popup {
+            width: 700px;
+            height: 500px;
+            padding: 40px;
+            background: white, 0, 0,0, 60;
+            border: 10px solid white;
+            box-shadow: 15px 15px 0 rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .popup-title {
+            font-size: 82px;
+            color: #FF004F;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        .yarn-display {
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 8px solid #e0e0e0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .yarn-display img {
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+        }
+
+        .collect-text {
+            font-size: 24px;
+            color: white;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .popup-buttons button {
+            font-size: 36px;
+            font-family: "Micro 5", sans-serif;
+            color: white;
+            background: rgba(0, 0, 0, 0);
+            border: 5px solid white;
+            padding: 12px 40px;
+            cursor: pointer;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.4);
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+            transition: all 0.2s;
+        }
+
+        .popup-buttons button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-2px, -2px);
+            box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        .popup-buttons button:active {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="top-row">
+
+            <img src="../img/(광고)물불게임.gif" class="gif" alt="">
+
+            <div class="main-back">
+
+                <img src="../img/하늘.png" class="main-img" alt="">
+
+                <div class="main-obj">
+                    <img src="../img/구름.gif" class="main-cloud" alt="">
+                    <img src="../img/지형1.png" class="main-ground" alt="">
+                </div>
+
+                <!-- 클리어 팝업 오버레이 -->
+                <div class="clear-popup-overlay">
+                    <div class="clear-popup micro-5-regular">
+                        <h1 class="popup-title">Congratulations</h1>
+                        
+                        <div class="yarn-display">
+                            <img src="../img/털뭉치_빨강.png" alt="Red Yarn">
+                        </div>
+                        
+                        <p class="collect-text">Collect all color tresure</p>
+                        
+                        <div class="popup-buttons">
+                            <button onclick="location.href='index.html'">Main</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <img src="../img/(광고)라면가게.gif" class="gif">
+        </div>
+
+        <div class="bottom-row">
+            <img src="../img/내가만든거 아님.png" class="ad" alt="">
+            <img src="../img/역전재판.png" class="ad" alt="">
+        </div>
+    </div>
+
+</body>
+
+</html>
