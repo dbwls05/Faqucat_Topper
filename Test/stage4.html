@@ -666,7 +666,7 @@
             if (game.stageCleared) return;
             game.stageCleared = true;
             game.running = false;
-            
+            localStorage.setItem('stage4_clear', 'true'); 
             const popup = document.getElementById('popupBackground');
             popup.innerHTML = `
                 <div class="clear-popup micro-5-regular">

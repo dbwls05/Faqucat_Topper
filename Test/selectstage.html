@@ -83,18 +83,6 @@
             width: 1200px;
         }
 
-        /* ===== 버튼 및 제목 =====
-        h1 {
-            font-size: 200px;
-            margin-bottom: 10px;
-            text-shadow: 8px 8px 0px rgba(0, 0, 0, 0.5);
-        } */
-
-
-        /* 통일적인 디자인 끝 */
-
-
-
         .select-background {
             position: absolute;
             top: 0;
@@ -104,7 +92,6 @@
             background-color: rgba(0, 0, 0, 0.3);
             z-index: 20;
             display: flex;
-            /* 중앙 정렬용 */
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(5px);
@@ -122,16 +109,14 @@
             background: rgba(255, 255, 255, 0.40);
             box-shadow: 10px 10px 0 0 rgba(0, 0, 0, 0.50);
             position: relative;
-            /* h1 위치 기준 */
         }
-
 
         .select h1 {
             font-size: 90px;
             margin-bottom: 5px;
             text-align: center;
             position: static;
-            color : white
+            color: white;
         }
 
         .select-img {
@@ -140,7 +125,7 @@
             gap: 25px;
             align-items: center;
             justify-content: center;
-            margin-bottom : 80px;
+            margin-bottom: 80px;
         }
 
         .select-img .top,
@@ -159,9 +144,13 @@
             cursor: pointer;
         }
 
-        .select-img img:hover {
+        .select-img img:hover:not(.locked) {
             transform: scale(1.05);
             box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .select-img img.locked {
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -188,14 +177,14 @@
                         <h1 class="micro-5-regular">Stage Select</h1>
                         <div class="select-img">
                             <div class="top">
-                                <img src="../img/stageSelect1.png" alt="Stage 1" onclick="location.href='stage1.html'">
-                                <img src="../img/stageSelect2.png" alt="Stage 2" onclick="location.href='stage2.html'">
-                                <img src="../img/stageSelect3.png" alt="Stage 3" onclick="location.href='stage3.html'">
+                                <img id="stage1" src="../img/stageSelect1.png" alt="Stage 1" data-stage="1">
+                                <img id="stage2" src="../img/stageSelect0.png" alt="Stage 2" data-stage="2">
+                                <img id="stage3" src="../img/stageSelect0.png" alt="Stage 3" data-stage="3">
                             </div>
                             <div class="bottom">
-                                <img src="../img/stageSelect4.png" alt="Stage 4" onclick="location.href='stage4.html'">
-                                <img src="../img/stageSelect5.png" alt="Stage 5" onclick="location.href='stage5.html'">
-                                <img src="../img/stageSelect6.png" alt="Stage 6" onclick="location.href='stage6.html'">
+                                <img id="stage4" src="../img/stageSelect0.png" alt="Stage 4" data-stage="4">
+                                <img id="stage5" src="../img/stageSelect0.png" alt="Stage 5" data-stage="5">
+                                <img id="stage6" src="../img/stageSelect0.png" alt="Stage 6" data-stage="6">
                             </div>
                         </div>
                     </div>
@@ -203,10 +192,8 @@
 
             </div>
 
-
             <img src="../img/(광고)라면가게.gif" class="gif">
         </div>
-
 
         <div class="bottom-row">
             <img src="../img/내가만든거 아님.png" class="ad" alt="">
@@ -214,7 +201,66 @@
         </div>
     </div>
 
+    <script>
+        // 스테이지 잠금 해제 상태를 확인하고 UI를 업데이트하는 함수
+        function updateStageUI() {
+            for (let i = 1; i <= 6; i++) {
+                const img = document.getElementById(`stage${i}`);
+                const isClear = i === 1 || (i > 1 && localStorage.getItem(`stage${i-1}_clear`) === "true");
+                
+                if (isClear) {
+                    // 스테이지 잠금 해제됨
+                    img.src = `../img/stageSelect${i}.png`;
+                    img.classList.remove('locked');
+                    img.style.cursor = 'pointer';
+                } else {
+                    // 스테이지 잠김
+                    img.src = `../img/stageSelect0.png`;
+                    img.classList.add('locked');
+                    img.style.cursor = 'not-allowed';
+                }
+            }
+        }
 
+        // 스테이지 클릭 이벤트 처리
+        function handleStageClick(stageNum) {
+            const isUnlocked = stageNum === 1 || (stageNum > 1 && localStorage.getItem(`stage${stageNum-1}_clear`) === "true");
+            
+            if (isUnlocked) {
+                location.href = `stage${stageNum}.html`;
+            } else {
+                // 잠긴 스테이지를 클릭했을 때 (선택사항: 알림 추가 가능)
+                console.log(`Stage ${stageNum} is locked!`);
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        window.onload = () => {
+            updateStageUI();
+            
+            // 모든 스테이지 이미지에 클릭 이벤트 추가
+            for (let i = 1; i <= 6; i++) {
+                const img = document.getElementById(`stage${i}`);
+                img.addEventListener('click', () => handleStageClick(i));
+            }
+        };
+
+        // 테스트용: 콘솔에서 스테이지 클리어 상태를 설정할 수 있습니다
+        // 예: clearStage(1) - 1번 스테이지 클리어
+        function clearStage(stageNum) {
+            localStorage.setItem(`stage${stageNum}_clear`, "true");
+            updateStageUI();
+            console.log(`Stage ${stageNum} cleared!`);
+        }
+
+        // 테스트용: 모든 진행상황 초기화
+        function resetProgress() {
+            for (let i = 1; i <= 6; i++) {
+                localStorage.removeItem(`stage${i}_clear`);
+            }
+            updateStageUI();
+            console.log('All progress reset!');
+        }
+    </script>
 </body>
-
 </html>
