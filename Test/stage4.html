@@ -362,7 +362,8 @@
         const grayCatGif = document.getElementById('grayCatGif');
 
         const images = {
-            key: new Image(),
+            key_yellow: new Image(),
+            key_gray: new Image(),
             box_open: new Image(),
             box_close: new Image(),
             yarn: new Image(),
@@ -377,10 +378,12 @@
             stone1: new Image(),
             stone2: new Image(),
             stone3: new Image(),
-            stone_small: new Image()
+            stone_small: new Image(),
+            light: new Image()
         };
 
-        images.key.src = '../img/열쇠.gif';
+        images.key_yellow.src = '../img/열쇠.gif';
+        images.key_gray.src = '../img/열쇠_회색.png';
         images.box_open.src = '../img/보물상자_open.png';
         images.box_close.src = '../img/보물상자_close.png';
         images.ground1.src = '../img/땅_long.png';
@@ -396,6 +399,7 @@
         images.stone2.src = "../img/돌막대2.png";
         images.stone3.src = "../img/돌막대3.png";
         images.stone_small.src = "../img/장애물_돌.png";
+        images.light.src = "../img/light.png";
 
         const catImages = {
             yellow: {
@@ -437,7 +441,10 @@
                     { x: 583, y: 302, width: 47, height: 25, image: 'stone_small' }
                 ],
                 keys: [
-                    { x: 1080, y: 70, collected: false, color:'glay', image: 'key' }
+                    { x: 1080, y: 70, collected: false, color:'yellow', image: 'key_yellow' },
+                    { x: 50, y: 600, collected: false, color:'glay', image: 'key_gray' },
+                    { x: 1080, y: 70, collected: false, color:'yellow', image: 'light' },
+                    { x: 50, y: 600, collected: false, color:'glay', image: 'light' }
                 ],
                 box: { x: 110, y: 75, opened: false },
                 yarn: { x: 0, y: 0, visible: false },
@@ -575,7 +582,7 @@
                 }
             });
 
-            if (!game.box.opened && game.keysCollected >= 1) {
+            if (!game.box.opened && game.keysCollected >= 4) {
                 if (checkOverlap(game.yellowCat, game.box, 74, 46) ||
                     checkOverlap(game.grayCat, game.box, 74, 46)) {
                     game.box.opened = true;
@@ -590,7 +597,7 @@
                     game.yellowTouchedYarn = true;
                 }
                 if (checkOverlap(game.grayCat, game.yarn, 40, 40)) {
-                    game.grayTouchedYarn = true;
+                    game.grayTouchedYarn = t4rue;
                 }
 
                 if (game.yellowTouchedYarn && game.grayTouchedYarn) {
@@ -634,7 +641,8 @@
 
             game.keys.forEach(key => {
                 if (!key.collected) {
-                    ctx.drawImage(images.key, key.x, key.y, 26, 40);
+                    const keyImg = images.key;
+                    ctx.drawImage(images[key.image], key.x, key.y, 26, 40);
                 }
             });
 

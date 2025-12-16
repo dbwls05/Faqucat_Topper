@@ -323,8 +323,8 @@
                 </div>
 
                 <!-- GIF 고양이들 -->
-                <img id="yellowCatGif" class="cat-gif" src="../img/치즈냥.gif" alt="Yellow Cat">
-                <img id="grayCatGif" class="cat-gif" src="../img/회색냥.gif" alt="Gray Cat">
+                <img id="yellowCatGif" class="cat-gif" src="../img/치즈냥_걷기_오른쪽.gif" alt="Yellow Cat">
+                <img id="grayCatGif" class="cat-gif" src="../img/회색냥_걷기_왼쪽.gif" alt="Gray Cat">
 
                 <canvas id="gameCanvas" width="1200" height="750"
                     style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100; pointer-events: none;">
@@ -362,7 +362,8 @@
         const grayCatGif = document.getElementById('grayCatGif');
 
         const images = {
-            key: new Image(),
+            key_yellow: new Image(),
+            key_gray: new Image(),
             box_open: new Image(),
             box_close: new Image(),
             yarn: new Image(),
@@ -373,10 +374,12 @@
             water1: new Image(),
             water2: new Image(),
             heart_full: new Image(),
-            heart_empty: new Image()
+            heart_empty: new Image(),
+            light: new Image()
         };
 
-        images.key.src = '../img/열쇠.gif';
+        images.key_yellow.src = '../img/열쇠.gif';
+        images.key_gray.src = '../img/열쇠_회색.png'
         images.box_open.src = '../img/보물상자_open.png';
         images.box_close.src = '../img/보물상자_close.png';
         images.ground1.src = '../img/땅_long.png';
@@ -388,6 +391,7 @@
         images.water2.src = '../img/물2.png';
         images.heart_full.src = "../img/채워진하트.png";
         images.heart_empty.src = "../img/빈하트.png";
+        images.light.src = "../img/light.png";
 
         const catImages = {
             yellow: {
@@ -413,7 +417,7 @@
                     { x: 441, y: 500, width: 92, height: 50, image: 'ground3' },
                     { x: 325, y: 365, width: 92, height: 50, image: 'ground3' },
                     { x: 463, y: 230, width: 92, height: 50, image: 'ground3' },
-                    { x: 624, y: 500, width: 72, height: 50, image: 'ground3' },
+                    { x: 635, y: 500, width: 72, height: 50, image: 'ground3' },
                     { x: 973, y: 500, width: 72, height: 50, image: 'ground3' },
                     { x: 850, y: 210, width: 270, height: 95, image: 'ground2' }
                 ],
@@ -422,7 +426,10 @@
                     { x: 700, y: 640, width: 292, height: 73, image: 'water2' }
                 ],
                 keys: [
-                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'key' }
+                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'key_yellow' },
+                    { x: 590, y: 600, collected: false, color: 'gray', image: 'key_gray'},
+                    { x: 493, y: 180, collected: false, color: 'yellow', image: 'light' },
+                    { x: 590, y: 600, collected: false, color: 'gray', image: 'light'}
                 ],
                 box: { x: 950, y: 185, opened: false },
                 yarn: { x: 0, y: 0, visible: false },
@@ -560,7 +567,7 @@
                 }
             });
 
-            if (!game.box.opened && game.keysCollected >= 1) {
+            if (!game.box.opened && game.keysCollected >= 4) {
                 if (checkOverlap(game.yellowCat, game.box, 74, 46) ||
                     checkOverlap(game.grayCat, game.box, 74, 46)) {
                     game.box.opened = true;
@@ -619,7 +626,8 @@
 
             game.keys.forEach(key => {
                 if (!key.collected) {
-                    ctx.drawImage(images.key, key.x, key.y, 26, 40);
+                    const keyImg = images.key;
+                    ctx.drawImage(images[key.image], key.x, key.y, 26, 40);
                 }
             });
 

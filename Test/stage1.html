@@ -139,6 +139,7 @@
             height: 90px;
             z-index: 101;
             pointer-events: none;
+            transition: none;
         }
 
         /* ===== 이미지 영역 ===== */
@@ -339,8 +340,8 @@
                 </div>
                 
                 <!-- GIF 고양이들 -->
-                <img id="yellowCatGif" class="cat-gif" src="../img/치즈냥.gif" alt="Yellow Cat">
-                <img id="grayCatGif" class="cat-gif" src="../img/회색냥.gif" alt="Gray Cat">
+                <img id="yellowCatGif" class="cat-gif" src="../img/치즈냥_걷기_오른쪽.gif" alt="Yellow Cat">
+                <img id="grayCatGif" class="cat-gif" src="../img/회색냥_걷기_왼쪽.gif" alt="Gray Cat">
                 
                 <canvas id="gameCanvas" width="1200" height="750"
                     style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100; pointer-events: none;">
@@ -378,7 +379,8 @@
         const grayCatGif = document.getElementById('grayCatGif');
 
         const images = {
-            key: new Image(),
+            key_yellow: new Image(),
+            key_gray: new Image(),
             key_get: new Image(),
             box_open: new Image(),
             box_close: new Image(),
@@ -391,7 +393,8 @@
             light: new Image()
         };
 
-        images.key.src = '../img/열쇠.gif';
+        images.key_yellow.src = '../img/열쇠.gif';
+        images.key_gray.src = '../img/열쇠_회색.png';
         images.key_get.src = '../img/열쇠.png';
         images.box_open.src = '../img/보물상자_open.png';
         images.box_close.src = '../img/보물상자_close.png';
@@ -431,8 +434,10 @@
                 { x: 865, y: 222, width: 270, height: 95, image: 'ground2' }
             ],
             keys: [
-                { x: 60, y: 130, collected: false, color: 'yellow', image: 'key' },
-                { x: 60, y: 130, collected: false, color: 'yellow', image: 'light' },
+                { x: 60, y: 130, collected: false, color: 'yellow', image: 'key_yellow' },
+                { x: 200, y: 600, collected: false, color: 'gray', image: 'key_gray'},
+                { x: 200, y: 600, collected: false, color: 'gray', image: 'light' },
+                { x: 60, y: 130, collected: false, color: 'yellow', image: 'light' }
             ],
             box: { x: 963, y: 199, opened: false, image: 'box_close' },
             yarn: { x: 0, y: 0, visible: false },
@@ -560,7 +565,7 @@
                 }
             });
 
-            if (!game.box.opened && game.keysCollected >= 1) {
+            if (!game.box.opened && game.keysCollected >= 4) {
                 if (checkOverlap(game.yellowCat, game.box, 74, 46) ||
                     checkOverlap(game.grayCat, game.box, 74, 46)) {
                     game.box.opened = true;
@@ -613,7 +618,7 @@
             game.keys.forEach(key => {
                 if (!key.collected) {
                     const keyImg = images.key;
-                    ctx.drawImage(keyImg, key.x, key.y, 26, 40);
+                    ctx.drawImage(images[key.image], key.x, key.y, 26, 40);
                 }
             });
 
