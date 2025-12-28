@@ -202,8 +202,9 @@
     </div>
  
     <script>
-        resetProgress();
-        for (let i = 1; i <= 4; i++) {
+        // resetProgress();
+
+        for (let i = 1; i <= 6; i++) {
             clearStage(i);
         }
         // 스테이지 잠금 해제 상태를 확인하고 UI를 업데이트하는 함수
@@ -233,7 +234,6 @@
             if (isUnlocked) {
                 location.href = `stage${stageNum}.html`;
             } else {
-                // 잠긴 스테이지를 클릭했을 때 (선택사항: 알림 추가 가능)
                 console.log(`Stage ${stageNum} is locked!`);
             }
         }
