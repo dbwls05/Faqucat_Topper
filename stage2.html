@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facucat</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/stage2.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="top-row">
+            <img src="img/(광고)물불게임.gif" class="gif" alt="">
+
+            <div class="main-back">
+                <div class="main">
+                    <div class="main-heart">
+                        <div class="main-heart" id="heartContainer"></div>
+                    </div>
+                    <h1 class="micro-5-regular">Stage 2</h1>
+                    <img src="img/Stop.png" class="stop" alt="Stop" id="stopBtn">
+                </div>
+                <img src="img/하늘.png" class="main-img" alt="">
+                <div class="main-obj">
+                    <img src="img/구름.png" class="main-cloud" alt="">
+                    <img src="img/지형1.png" class="main-ground" alt="">
+                </div>
+
+                <!-- GIF 고양이들 -->
+                <img id="yellowCatGif" class="cat-gif" src="img/치즈냥_걷기_오른쪽.gif" alt="Yellow Cat">
+                <img id="grayCatGif" class="cat-gif" src="img/회색냥_걷기_왼쪽.gif" alt="Gray Cat">
+
+                <canvas id="gameCanvas" width="1200" height="750"
+                    style="position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:100; pointer-events: none;">
+                </canvas>
+
+                <div class="popup-background" id="popupBackground">
+                    <div class="clear-popup micro-5-regular">
+                        <h1 class="popup-title">GAME CLEAR</h1>
+                        <div class="clear-items">
+                            <div class="item"><img src="img/털뭉치_빨강.png" alt="Item 1"></div>
+                            <div class="item"><img src="img/털뭉치_노랑.png" alt="Item 2"></div>
+                            <div class="item empty"></div>
+                        </div>
+                        <div class="clear-btns">
+                            <button id="restartBtn">RESTART</button>
+                            <button id="nextBtn">NEXT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <img src="img/(광고)라면가게.gif" class="gif">
+        </div>
+        <div class="bottom-row">
+            <img src="img/내가만든거 아님.png" class="ad" alt="">
+            <img src="img/역전재판.png" class="ad" alt="">
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/stage2.js"></script>
+    <script src="js/fit.js"></script>
+</body>
+
+</html>

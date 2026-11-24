@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Micro+5&display=swap');
+
+/* ===== 폰트 ===== */
+.micro-5-regular {
+    font-family: "Micro 5", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* ===== 화면 맞춤: 스크롤 방지 (js/fit.js 와 함께 사용) ===== */
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
